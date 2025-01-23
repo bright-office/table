@@ -346,7 +346,7 @@ type TableTopNav = {
 const TableTopNav = memo(forwardRef(({ renderTableTopNav, headerProps, isTree }: TableTopNav, ref: ForwardedRef<HTMLDivElement>) => {
     return renderTableTopNav
         ? (
-            <div id="bt-table-top-nav" className='w-full h-max' ref={ref}>
+            <div id="bt-table-top-nav" className='bt-w-full bt-h-max' ref={ref}>
                 {renderTableTopNav(headerProps, isTree)}
             </div>
         )
@@ -513,6 +513,7 @@ const Table = React.forwardRef(
             }
         };
 
+        {/* this is what calculates all the table dimensions  */ }
         const {
             contentHeight,
             contentWidth,
@@ -548,7 +549,8 @@ const Table = React.forwardRef(
             showHeader,
             onTableScroll: debounce((coords: { x?: number; y?: number }) => onScrollTo(coords), 100),
             onTableResizeChange: handleTableResizeChange,
-            hasPagination: !!props.pagination
+            hasPagination: !!props.pagination,
+            hasRowSelection: rowSelection
         });
 
         useAffix({
@@ -1122,7 +1124,7 @@ const Table = React.forwardRef(
                     <Scrollbar
                         key="scrollbar"
                         tableId={id}
-                        style={{ width: tableWidth.current }}
+                        style={{ width: "calc(100% - 10px)" }}
                         length={tableWidth.current}
                         onScroll={onScrollHorizontal}
                         scrollLength={contentWidth.current}
@@ -1288,7 +1290,7 @@ const Table = React.forwardRef(
         const renderDefaultPagination = () => {
             if (data.length && pagination)
                 return (
-                    <div className="paginationWrapper w-full h-16 bg-white">
+                    <div className="bt-pagination-wrapper">
                         <Pagination {...pagination} />
                     </div>
                 )
@@ -1306,7 +1308,7 @@ const Table = React.forwardRef(
             <RowSelectionWrapper>
                 <TableContext.Provider value={contextValue}>
                     <div
-                        className="bt-container space-y-2.5 overflow-hidden"
+                        className="bt-container bt-space-y-2.5 bt-overflow-hidden"
                         style={{
                             height: style?.height,
                             width: style?.width
@@ -1320,7 +1322,7 @@ const Table = React.forwardRef(
                         />
 
                         <div
-                            className='bt-wrapper relative border border-[var(--border-color)] rounded-md'
+                            className='bt-wrapper bt-relative bt-border bt-border-[var(--border-color)] bt-rounded-md'
                             style={{
                                 width: styles.width,
                                 height: TableHeightWithPagination,

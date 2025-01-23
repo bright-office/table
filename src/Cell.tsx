@@ -8,7 +8,6 @@ import { useClassNames, convertToFlex } from './utils';
 import TableContext from './TableContext';
 import { StandardProps, RowDataType, RowKeyType } from './@types/common';
 import { columnHandledProps } from './Column';
-import { cn } from './tailwind/twMerge';
 
 export interface CellProps<Row extends RowDataType> extends StandardProps {
     /** Data binding key, but also a sort of key */
@@ -172,7 +171,7 @@ const Cell = React.forwardRef(
         const ExpandedIcon = <svg
             width="100%"
             height="100%"
-            className="-rotate-90 text-[var(--bg-bt-expand-icon)] hover:text-[var(--bg-bt-expand-icon)]"
+            className="-bt-rotate-90 bt-text-[var(--bg-bt-expand-icon)] hover:bt-text-[var(--bg-bt-expand-icon)]"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -184,7 +183,7 @@ const Cell = React.forwardRef(
         const CollapsedIcon = <svg
             width="100%"
             height="100%"
-            className="-rotate-90 text-[var(--bg-bt-expand-icon)]  hover:text-[var(--bg-bt-expand-icon)]"
+            className="-bt-rotate-90 bt-text-[var(--bg-bt-expand-icon)]  hover:bt-text-[var(--bg-bt-expand-icon)]"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -192,21 +191,22 @@ const Cell = React.forwardRef(
         </svg>
 
         const renderTreeNodeExpandIcon = () => {
-            const ExpandIconComponent = expanded ? ExpandedIcon : CollapsedIcon;
+            const expandIconComponent = expanded ? ExpandedIcon : CollapsedIcon;
 
             if (isTreeCol && hasChildren) {
                 return (
                     <span
                         role="button"
                         tabIndex={-1}
-                        className={cn(`bg-[var(--bg-bt-expand-icon-con)] hover:bg-[var(--bg-bt-expand-icon-con-hover)] w-5 h-5 p-1 flex items-center justify-center rounded-sm`)}
+                        className='bt-expansion-icon'
                         onClick={handleTreeToggle}>
-                        {ExpandIconComponent}
+                        {expandIconComponent}
                     </span>
                 );
             }
 
-            return <span className='w-6'>
+            {/* TODO: tailwind remove */ }
+            return <span className='bt-w-6'>
             </span>;
         };
 
@@ -224,12 +224,12 @@ const Cell = React.forwardRef(
 
         if (removed) return null;
 
-        const isEven = rowIndex && (rowIndex + 1) % 2 === 0;
+        {/* const isEven = rowIndex && (rowIndex + 1) % 2 === 0;
 
         const headerColors = `bg-[var(--bg-bt-header)] text-[var(--fg-bt-header)]`;
         const oddRowColors = `bg-[var(--bg-bt-odd)] text-[var(--fg-bt-odd)]`;
         const evenRowColors = `bg-[var(--bg-bt-even)] text-[var(--fg-bt-even)]`;
-        const treeColColors = `bg-[var(--bg-bt-tree-col)] text-[var(--fg-bt-tree-col)] cursor-pointer`;
+        const treeColColors = `bg-[var(--bg-bt-tree-col)] text-[var(--fg-bt-tree-col)] cursor-pointer`; */}
 
         return (
             <div
@@ -240,17 +240,21 @@ const Cell = React.forwardRef(
                     onClick?.(e);
                     isTreeCol && hasChildren && handleTreeToggle?.(e);
                 }}
-                className={cn({
+                className={classes}
+
+                //TODO: tailwind remove
+                /* className={{
                     [classes]: true,
                     [headerColors]: isHeaderCell,
                     [oddRowColors]: !isHeaderCell && (!isEven),
                     [evenRowColors]: !isHeaderCell && (isEven),
                     [treeColColors]: isTreeCol && hasChildren,
-                })
                 }
+                } */
                 style={styles}>
 
-                <div className={cn(prefix('content'), "")} style={contentStyles}>
+                {/* // TODO: tailwind remove */}
+                <div className={prefix('content')} style={contentStyles}>
                     {content}
                 </div>
             </div>

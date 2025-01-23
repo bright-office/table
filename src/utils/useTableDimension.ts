@@ -42,8 +42,8 @@ interface TableDimensionProps<Row, Key> {
 }
 
 // 2px is for the border to be display; 
-export const PAGINATION_HEIGHT = 64 + 2;
-export const ROW_SELECTION_COL_WIDTH = 50 + 2;
+export const PAGINATION_HEIGHT = 64;
+export const ROW_SELECTION_COL_WIDTH = 50;
 
 /**
  * The dimension information of the table,
@@ -78,7 +78,9 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
 
     // accounting for table top height.
     const tableNavContainer = document.querySelector("#bt-table-top-nav");
-    const tableNavHeight = tableNavContainer && tableNavContainer.getBoundingClientRect().height || 0;
+    const tableNavHeight = tableNavContainer
+        ? tableNavContainer.getBoundingClientRect().height
+        : 0;
 
     const contentHeight = useRef(0);
     const contentWidth = useRef(0);
@@ -201,7 +203,11 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         const table = tableRef?.current; //undefined
         const row = table?.querySelector(`.${prefix('row')}:not(.virtualized)`); //undefined
 
-        let nextContentWidth = row ? getWidth(row) : 0;
+        let nextContentWidth = row ? getWidth(row) - (
+            props.hasRowSelection
+                ? (ROW_SELECTION_COL_WIDTH)
+                : 0
+        ) : 0;
 
         // Accounting for the width of the scroll bar if present.
         const hasHorizontalScrollbar = contentWidth.current > tableWidth.current;
@@ -242,7 +248,11 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
             const prevWidth = tableWidth.current;
 
             if (tableRef?.current) {
-                tableWidth.current = nextWidth || getWidth(tableRef?.current);
+                tableWidth.current = nextWidth || (getWidth(tableRef?.current)
+                    - (props.hasRowSelection
+                        ? (ROW_SELECTION_COL_WIDTH)
+                        : 0)
+                );
             }
 
             if (prevWidth && prevWidth !== tableWidth.current) {
@@ -252,7 +262,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
 
             setOffsetByAffix();
         },
-        [onTableResizeChange, setOffsetByAffix, tableRef]
+        [onTableResizeChange, setOffsetByAffix, tableRef, props.hasRowSelection]
     );
 
     const calculateTableHeight = useCallback(

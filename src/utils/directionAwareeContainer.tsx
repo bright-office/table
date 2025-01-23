@@ -2,7 +2,6 @@ import React from 'react';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useOutsideClick } from './useOutsideClick';
-import { cn } from '../tailwind/twMerge';
 
 export type direction = "top" | "bottom" | "right" | "left";
 
@@ -111,8 +110,6 @@ const DirectionAwareContainer = (props: directionAwareContainerProps) => {
                     break;
             }
 
-
-
             if (isInsideViewport) {
                 contentElement.style.transform = `translateX(${contentTransform.x}px) translateY(${contentTransform.y}px)`
                 return;
@@ -141,16 +138,11 @@ const DirectionAwareContainer = (props: directionAwareContainerProps) => {
     return createPortal(
         (<div
             ref={contentRef}
-            className={
-                cn(
-                    'bg-bg-base border border-outline-neutral rounded-md fixed top-0 left-0 z-50 opacity-0 translate-x-[50vw] translate-y-[50vh]',
-                    props.className,
-                    props.active ?
-                        "opacity-100 block" :
-                        "opacity-0 pointer-events-none hidden"
-                )} >
+            className={(`bt-direction-aware-con 
+                         ${props.active && "bt-direction-aware-con-active"} `
+            )}>
             {props.children}
-        </div>), document.body);
+        </div >), document.body);
 };
 
 export default DirectionAwareContainer;

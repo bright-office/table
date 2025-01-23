@@ -1,3 +1,5 @@
+@import "./pagination.less";
+
 :root {
     --prefix: bright-;
     --border-color: #eee;
@@ -32,9 +34,58 @@
     @import './treetable.less';
     @import './scrollbar.less';
     @import './column-group.less';
-    @import "./pagination.less";
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+.bt-expansion {
+    &-icon {
+        background: var(--bg-bt-expand-icon);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    &-icon:hover {
+        background: var(--bg-bt-expand-icon-hover);
+    }
+}
+
+.bt {
+    &-container {
+        width: 100%;
+        overflow: hidden;
+        background: var(--bg-bt-container, red);
+    }
+
+    &-wrapper {
+        width: 100%;
+    }
+
+    &-direction-aware-con {
+        background: var(--bg-bt-direction-aware-con, white);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 4px;
+        border-radius: 4px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 500;
+        opacity: 0;
+        transform: translateX(50vw) translateY(50vh);
+        pointer-events: none;
+        display: none;
+    }
+
+    &-direction-aware-con-active {
+        opacity: 1;
+        display: block;
+        pointer-events: all;
+    }
+}

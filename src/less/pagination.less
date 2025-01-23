@@ -1,29 +1,107 @@
-&-table-btp {
+.bt-pagination {
+    &-wrapper {
+        height: 66px;
+        max-height: auto;
+        width: 100%;
+    }
+
     &-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        width: calc(100% - 40px);
-        padding: 20px;
+        padding: 10px;
+        height: 100%;
+        background: var(--bg-bt-pagination-container, white);
     }
 
-    &-status {
-        display: flex;
-        gap: 2px;
-    }
-
-    &-page-switcher {
-        display: flex;
-        gap: 10px;
-    }
-
-    &-numbered-switcher {
+    &-rpp-con {
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+        gap: 4px;
     }
 
-    &-RPP-container {
+    &-rpp-sb {
+        background: var(--bg-bt-pagination-rpp-sb, gray);
+        border-radius: 4px;
+        padding: 4px;
+        height: 20px;
+        font-size: 14px;
+        gap: 2px;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    &-rpp-sb-icon {
+        transform: rotate(90deg);
+        height: 10px;
+        width: 10px;
+    }
+
+    &-rpp-sb-option {
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    &-rpp-sb-option-active {
+        background: var(--bg-bt-pagination-rpp-sb-option-active, blue);
+    }
+
+    &-arrow-btn {
+        background: var(--bg-bt-pagination-btn, gray);
+        border-radius: 4px;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+        height: 20px;
+        width: 20px;
+    }
+
+    &-arrow-btn-disabled {
+        background: var(--bg-bt-pagination-btn-disabled, white);
+        cursor: not-allowed;
+    }
+
+    &-ps {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    &-nps {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+    }
+
+    &-nps-btn {
+        text-decoration: none;
+        height: 20px;
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        padding: 4px;
+        color: var(--bg-bt-pagination-btn, white);
+        background: var(--bg-bt-pa-btn, red);
+    }
+
+    &-nps-btn-normal {
+        background: var(--bg-bt-pagination-btn, gray);
+    }
+
+    &-nps-btn-active {
+        background: var(--bg-bt-pagination-btn-active, blue);
     }
 }

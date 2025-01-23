@@ -2,7 +2,6 @@ import React, { cloneElement, ReactElement, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useClassNames } from "./utils";
 import { Icon } from "./Icons";
-import { cn } from "./tailwind/twMerge";
 import DirectionAwareContainer from "./utils/directionAwareeContainer";
 
 type rowPerPageSwitcherProps = {
@@ -17,21 +16,21 @@ const RowPerPageSwitcher = (props: rowPerPageSwitcherProps) => {
 
     const activatorRef = useRef<HTMLDivElement>(null);
 
-    return <div className="RPP-container flex gap-2 items-center">
-        <div className="RPP-text"> Rows Per Page:</div>
+    return <div className="bt-pagination-rpp-con">
+        <div className=""> Rows Per Page:</div>
         <div
             ref={activatorRef}
-            className={cn("RPP-switch-box flex items-center bg-gray-100 rounded-sm px-1 justify-center cursor-pointer",)}
+            className="bt-pagination-rpp-sb"
             onClick={() => setIsVisible(true)} >
             <span>
                 {active}
             </span>
-            <Icon name="arrow_right" className="w-4 rotate-90" />
+            <Icon name="arrow_right" className="bt-pagination-rpp-sb-icon" />
         </div>
 
         {isVisible &&
             <DirectionAwareContainer
-                direction="top"
+                direction="bottom"
                 centerAlignContainer
                 directionPriority={["top", "right", "left", "bottom"]}
                 activatorRef={activatorRef}
@@ -40,7 +39,7 @@ const RowPerPageSwitcher = (props: rowPerPageSwitcherProps) => {
                     setIsVisible(false);
                 }}
                 active={isVisible}
-                className={"w-12 flex flex-col text-center h-auto bg-white text-gray-600 rounded-sm"}
+                className="bt-pagination-rpp-sb-options-con"
             >
                 {props.options.map((option, index) => (
                     <div
@@ -50,19 +49,22 @@ const RowPerPageSwitcher = (props: rowPerPageSwitcherProps) => {
                             setActive(option)
                             props.onChange(option);
                         }}
-                        className={cn(
-                            "cursor-pointer hover:bg-gray-200 text-gray-700 rounded-sm",
-                            option == props.selectedOption
-                                ? "bg-[var(--blue-primary-500)] text-white hover:bg-[var(--blue-primary-500)]"
-                                : "RPP-option"
-                        )}>
+                        className={`bt-pagination-rpp-sb-option 
+                            ${option == props.selectedOption && "bt-pagination-rpp-sb-option-active"}
+                            `}
+                    >
                         {option}
                     </div>
                 ))}
-            </DirectionAwareContainer>}
-
-    </div>
+            </DirectionAwareContainer>
+        }
+    </div >
 };
+
+{/* className={"bt-cursor-pointer hover:bt-bg-gray-200 bt-text-gray-700 bt-rounded-sm"} > */ }
+{/* /* option == props.selectedOption */ }
+{/* ? "bg-[var(--blue-primary-500)] bt-text-white hover:bg-[var(--blue-primary-500)]" */ }
+{/* : "RPP-option" */ }
 
 export type larvelPaginationObject = {
     first_page_url: string,
@@ -141,11 +143,6 @@ const Pagination = (props: paginationProps) => {
     const { prefix } = useClassNames("btp");
 
     const statusString = `${serverResponse.from}-${serverResponse.to} of ${serverResponse.total}`;
-    const paginationStyle = {
-        btn: "w-6 p-1 border border-gray-200 rounded-sm text-gray-800",
-        disabled: "text-gray-400 border-gray-100",
-        left: "rotate-180"
-    }
 
     const GoToLastPage = () => {
         const isDisabled = parseInt(currentlyActivePage?.label || "") === serverResponse.last_page;
@@ -157,10 +154,10 @@ const Pagination = (props: paginationProps) => {
             },
             [linkComponent.urlProp]: isDisabled ? null : `${serverResponse.last_page_url}&per_page=${serverResponse.per_page}`,
             "aria-disabled": isDisabled,
-            children: <Icon name="arrow_right_doubled" className={cn(
-                paginationStyle.btn,
-                isDisabled && paginationStyle.disabled,
-            )} />
+            children: <Icon
+                name="arrow_right_doubled"
+                className={`bt-pagination-arrow-btn  ${isDisabled && "bt-pagination-arrow-btn-disabled"}`}
+            />
         })
     }
 
@@ -175,14 +172,14 @@ const Pagination = (props: paginationProps) => {
             "aria-disabled": isDisabled,
             children: <Icon
                 name="arrow_right_doubled"
-                className={cn(
-                    paginationStyle.left,
-                    paginationStyle.btn,
-                    isDisabled && paginationStyle.disabled,
-                )}
+                className={`bt-pagination-arrow-btn  ${isDisabled && "bt-pagination-arrow-btn-disabled"}`}
+                style={{
+                    transform: `rotate(180deg)`
+                }}
             />
         })
     }
+
     const GoBackOnePage = () => {
         const isDisabled = parseInt(currentlyActivePage?.label || "") === 1;
         return cloneElement(linkComponent.element, {
@@ -192,14 +189,14 @@ const Pagination = (props: paginationProps) => {
             [linkComponent.urlProp]: isDisabled ? null : `${serverResponse.prev_page_url}&per_page=${serverResponse.per_page}`,
             "aria-disabled": parseInt(currentlyActivePage?.label || "") === 1,
             children: <Icon name="arrow_right"
-                className={cn(
-                    paginationStyle.left,
-                    paginationStyle.btn,
-                    isDisabled && paginationStyle.disabled,
-                )}
+                className={`bt-pagination-arrow-btn  ${isDisabled && "bt-pagination-arrow-btn-disabled"}`}
+                style={{
+                    transform: `rotate(180deg)`
+                }}
             />
         })
     }
+
 
     const GoForwardOnePage = () => {
         const isDisabled = parseInt(currentlyActivePage?.label || "") === serverResponse.last_page;
@@ -211,16 +208,15 @@ const Pagination = (props: paginationProps) => {
             "aria-disabled": isDisabled,
             children: <Icon
                 name="arrow_right"
-                className={cn(
-                    paginationStyle.btn,
-                    isDisabled && paginationStyle.disabled,
-                )}
+                className={`bt-pagination-arrow-btn  ${isDisabled && "bt-pagination-arrow-btn-disabled"}`}
             />
+
         })
     }
 
     const NumberedSwitcher = () => {
-        return <div className={cn(prefix("numbered-switcher"), "flex items-center")}>
+        // TODO: tailwind remove
+        return <div className={(prefix("numbered-switcher"), "bt-pagination-nps")}>
             {serverResponse.links.slice(1, serverResponse.links.length - 1).map((link, index) => {
                 const isDisabled = link.active;
 
@@ -232,19 +228,19 @@ const Pagination = (props: paginationProps) => {
                     role: "button",
                     key: `page-${index}`,
                     "aria-disabled": link.active,
-                    className: cn("w-6 aspect-square grid place-items-center rounded-sm ",
-                        link.label !== "..." && "bg-gray-100",
-                        isDisabled && "bg-gray-50 text-gray-400",
-                        link.active && "bg-[var(--blue-primary-500)] text-white",
-                    ),
+                    className: `
+                    bt-pagination-nps-btn
+                    ${(link.label !== "...") && "bt-pagination-nps-btn-normal"} 
+                    ${isDisabled && "bt-pagination-nps-btn-disabled"} 
+                    ${link.active && "bt-pagination-nps-btn-active"}`,
                     children: link.label
                 })
             })}
         </div>
     }
-
+    {/* "bt-[font-weight:300px] bt-text-[14px] bt-text-gray-600 bt-h-16 bt-w-full" */ }
     return (
-        <div className={cn(prefix("container"), "[font-weight:300px] text-[14px] text-gray-600 h-16 w-full")} >
+        <div className={("bt-pagination-container")} >
             <div className={prefix("status")}>
                 {statusString}
             </div>
@@ -259,7 +255,7 @@ const Pagination = (props: paginationProps) => {
                 />
             </div>
 
-            <div className={cn(prefix("page-switcher"), "items-center")}>
+            <div className={(prefix("page-switcher"), "bt-pagination-ps")}>
                 <GoToFirstPage />
                 <GoBackOnePage />
 

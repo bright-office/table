@@ -1,6 +1,6 @@
 import { Cell, Column, ColumnGroup, HeaderCell, Table } from "bright-table"
 import { data, mockNestedData, } from "./faker";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { larvelPaginationObject } from "bright-table/types/src/Pagination.d.ts";
 import StyleGuide from "./styleGuide";
 
@@ -81,8 +81,7 @@ function App() {
     }
 
     return (
-        <div className="p-10">
-
+        <div className="p-20">
             <Table
                 rowSelection
                 headerHeight={80}
