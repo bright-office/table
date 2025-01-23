@@ -1,6 +1,6 @@
 import { Cell, Column, ColumnGroup, HeaderCell, Table } from "bright-table"
 import { data, mockNestedData, } from "./faker";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { larvelPaginationObject } from "bright-table/types/src/Pagination.d.ts";
 import StyleGuide from "./styleGuide";
 
@@ -82,7 +82,12 @@ function App() {
 
     return (
         <div className="p-20">
+            <h1>
+                Multi Header with pagination
+            </h1>
+
             <Table
+                name="MP"
                 rowSelection
                 headerHeight={80}
                 renderTableTopNav={() => {
@@ -149,13 +154,198 @@ function App() {
 
             </Table>
 
-            {/* <StyleGuide /> */}
+            <h1>
+                Without Pagination multi header
+            </h1>
+
+            <Table
+                name="MNP"
+                rowSelection
+                headerHeight={80}
+                renderTableTopNav={() => {
+                    return (
+                        <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
+                            I am the nav
+                        </div>
+                    )
+                }}
+                isTree
+                rowKey={"id"}
+                loading={loading}
+                shouldUpdateScroll={false}
+                data={data}
+                cellBordered
+                height={innerHeight - 200}
+                onRowClick={rowData => {
+                    console.log(rowData);
+                }}
+            >
+                <Column width={100} align="center" fixed={"left"} >
+                    <HeaderCell customizable>Id</HeaderCell>
+                    <Cell dataKey="id" />
+                </Column>
+
+                <ColumnGroup header="User Name">
+                    <Column width={250} fixed={pin ? "right" : false} >
+                        <HeaderCell>First Name</HeaderCell>
+                        <Cell dataKey="firstname" />
+                    </Column>
+
+                    <Column width={150}>
+                        <HeaderCell>Last Name</HeaderCell>
+                        <Cell dataKey="lastname" />
+                    </Column>
+
+                </ColumnGroup>
+
+                <Column width={300} flexGrow={1}>
+                    <HeaderCell>Email</HeaderCell>
+                    <Cell dataKey="email" />
+                </Column>
+
+                <Column>
+                    <HeaderCell>...</HeaderCell>
+                    <Cell style={{ padding: '6px' }}>
+                        {rowData => (
+                            <button onClick={() => alert(`id:${rowData.id}`)}>
+                                Edit
+                            </button>
+                        )}
+                    </Cell>
+                </Column>
+
+            </Table>
+
+            <h1>
+                Without pagination and without multi header
+            </h1>
+
+            <Table
+                name="SNP"
+                rowSelection
+                renderTableTopNav={() => {
+                    return (
+                        <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
+                            I am the nav
+                        </div>
+                    )
+                }}
+                isTree
+                rowKey={"id"}
+                loading={loading}
+                shouldUpdateScroll={false}
+                data={data}
+                cellBordered
+                height={innerHeight - 200}
+                onRowClick={rowData => {
+                    console.log(rowData);
+                }}
+            >
+                <Column width={100} align="center" fixed={"left"} >
+                    <HeaderCell customizable>Id</HeaderCell>
+                    <Cell dataKey="id" />
+                </Column>
+
+                <Column width={250} fixed={pin ? "right" : false} >
+                    <HeaderCell>First Name</HeaderCell>
+                    <Cell dataKey="firstname" />
+                </Column>
+
+                <Column width={150}>
+                    <HeaderCell>Last Name</HeaderCell>
+                    <Cell dataKey="lastname" />
+                </Column>
+
+                <Column width={300} flexGrow={1}>
+                    <HeaderCell>Email</HeaderCell>
+                    <Cell dataKey="email" />
+                </Column>
+
+                <Column>
+                    <HeaderCell>...</HeaderCell>
+                    <Cell style={{ padding: '6px' }}>
+                        {rowData => (
+                            <button onClick={() => alert(`id:${rowData.id}`)}>
+                                Edit
+                            </button>
+                        )}
+                    </Cell>
+                </Column>
+
+            </Table>
+
+            <h1>
+                With pagination single header
+            </h1>
+
+            <Table
+                name="SP"
+                rowSelection
+                renderTableTopNav={() => {
+                    return (
+                        <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
+                            I am the nav
+                        </div>
+                    )
+                }}
+
+                pagination={{
+                    serverResponse,
+                    onRowsPerPageChange(newRowPerPage) {
+                        console.log(newRowPerPage)
+                    },
+                    linkComponent: {
+                        element: <a />,
+                        urlProp: "href"
+                    }
+                }}
+                isTree
+                rowKey={"id"}
+                loading={loading}
+                shouldUpdateScroll={false}
+                data={data}
+                cellBordered
+                height={innerHeight - 200}
+                onRowClick={rowData => {
+                    console.log(rowData);
+                }}
+            >
+                <Column width={100} align="center" fixed={"left"} >
+                    <HeaderCell customizable>Id</HeaderCell>
+                    <Cell dataKey="id" />
+                </Column>
+
+                <Column width={250} fixed={pin ? "right" : false} >
+                    <HeaderCell>First Name</HeaderCell>
+                    <Cell dataKey="firstname" />
+                </Column>
+
+                <Column width={150}>
+                    <HeaderCell>Last Name</HeaderCell>
+                    <Cell dataKey="lastname" />
+                </Column>
+
+                <Column width={300} flexGrow={1}>
+                    <HeaderCell>Email</HeaderCell>
+                    <Cell dataKey="email" />
+                </Column>
+
+                <Column>
+                    <HeaderCell>...</HeaderCell>
+                    <Cell style={{ padding: '6px' }}>
+                        {rowData => (
+                            <button onClick={() => alert(`id:${rowData.id}`)}>
+                                Edit
+                            </button>
+                        )}
+                    </Cell>
+                </Column>
+
+            </Table>
+
+            <StyleGuide />
         </div >
     )
 }
 
 export default App
-
-
-
-

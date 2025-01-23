@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, memo, forwardRef, ForwardedRef } from 'react';
+import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, memo, forwardRef, ForwardedRef, useState, useEffect } from 'react';
 import * as ReactIs from 'react-is';
 import { getTranslateDOMPositionXY } from 'dom-lib/esm/translateDOMPositionXY.js';
 import PropTypes from 'prop-types';
@@ -66,6 +66,8 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
      * and no vertical scroll bar will appear
      * */
     autoHeight?: boolean;
+
+    name?: string;
 
     /**
      * Force the height of the table to be equal to the height of its parent container.
@@ -701,18 +703,46 @@ const Table = React.forwardRef(
         };
 
         const tableTopNavRef = useRef<HTMLDivElement>(null);
+        const paginationRef = useRef<HTMLDivElement>(null);
 
-        let ActualTableHeight = styles?.height as number;
-        let TableHeightWithPagination = styles?.height as number;
+        const [calculatedTableHeight, setCalculatedTableHeight] = useState({
+            tableHeightWithoutTopNav: styles.height,
+            tableHeightWithoutPagination: styles.height,
+            tableTopNavHeight: 0,
+            paginationHeight: 0,
+        });
 
-        if (pagination)
-            ActualTableHeight -= PAGINATION_HEIGHT
+        useEffect(() => {
+            let tableHeightWithoutPagination = styles?.height as number;
+            let tableHeightWithoutTopNav = styles?.height as number;
 
-        if (renderTableTopNav) {
-            const tableTopNavHeight = tableTopNavRef.current?.getBoundingClientRect().height;
-            ActualTableHeight -= tableTopNavHeight ?? 0;
-            TableHeightWithPagination -= tableTopNavHeight ?? 0;
-        }
+            setCalculatedTableHeight((prev) => {
+                let tableTopNavHeight = 0;
+                let paginationHeight = 0;
+
+                if (pagination && (pagination && ((pagination?.serverResponse?.links || [])?.length > 1))) {
+                    paginationHeight = paginationRef.current?.getBoundingClientRect().height || 0;
+                    tableHeightWithoutPagination -= paginationHeight;
+                }
+
+                if (renderTableTopNav) {
+                    tableTopNavHeight = tableTopNavRef.current?.getBoundingClientRect().height || 0;
+                    tableHeightWithoutTopNav -= tableTopNavHeight ?? 0;
+                }
+
+                if (!tableTopNavHeight && !paginationHeight)
+                    return prev;
+
+                return {
+                    paginationHeight,
+                    tableTopNavHeight,
+                    tableHeightWithoutTopNav,
+                    tableHeightWithoutPagination,
+                }
+
+            })
+
+        }, [tableTopNavRef.current, paginationRef.current])
 
 
         const renderRowExpanded = useCallback(
@@ -986,7 +1016,6 @@ const Table = React.forwardRef(
                     nextExpandedRowKeys.push(treeRowKey);
                 }
 
-
                 setExpandedRowKeys(nextExpandedRowKeys);
                 onExpandChange?.(!open, rowData);
             },
@@ -1111,8 +1140,6 @@ const Table = React.forwardRef(
         };
 
         const renderScrollbar = () => {
-            const height = getTableHeight();
-
             if (disabledScroll) {
                 return null;
             }
@@ -1139,9 +1166,9 @@ const Table = React.forwardRef(
                         vertical
                         key="vertical-scrollbar"
                         tableId={id}
-                        length={height - (headerHeight + PAGINATION_HEIGHT)}
+                        length={tableHeightWithoutTopNav - paginationHeight}
                         onScroll={onScrollVertical}
-                        scrollLength={contentHeight.current + PAGINATION_HEIGHT}
+                        scrollLength={contentHeight.current}
                         ref={scrollbarYRef}
                     />
                 );
@@ -1152,7 +1179,9 @@ const Table = React.forwardRef(
 
 
         const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
-            const bodyHeight = ActualTableHeight - headerHeight;
+            const bodyHeight = tableHeightWithoutTopNav - paginationHeight;
+            console.log({ tableHeightWithoutTopNav, paginationHeight, n: props.name })
+
             const bodyStyles = {
                 top: headerHeight,
                 height: bodyHeight
@@ -1251,7 +1280,8 @@ const Table = React.forwardRef(
                     role="rowgroup"
                     className={prefix('body-row-wrapper')}
                     style={bodyStyles}
-                    onScroll={onScrollBody}>
+                    onScroll={onScrollBody}
+                >
 
                     <div style={wheelStyles} className={prefix('body-wheel-area')} ref={wheelWrapperRef}>
                         {visibleRows.current}
@@ -1290,7 +1320,7 @@ const Table = React.forwardRef(
         const renderDefaultPagination = () => {
             if (data.length && pagination)
                 return (
-                    <div className="bt-pagination-wrapper">
+                    <div className="bt-pagination-wrapper" ref={paginationRef}>
                         <Pagination {...pagination} />
                     </div>
                 )
@@ -1324,10 +1354,11 @@ const Table = React.forwardRef(
                         <div
                             className='bt-wrapper bt-relative bt-border bt-border-[var(--border-color)] bt-rounded-md'
                             style={{
+                                ...style,
                                 width: styles.width,
-                                height: TableHeightWithPagination,
-                                ...style
+                                height: (tableHeightWithoutTopNav)
                             }}>
+
                             <div
                                 role={isTree ? 'treegrid' : 'grid'}
                                 // The aria-rowcount is specified on the element with the table.
@@ -1336,7 +1367,7 @@ const Table = React.forwardRef(
                                 aria-colcount={colCounts.current}
                                 {...rest}
                                 className={classes}
-                                style={{ height: ActualTableHeight, width: styles?.width }}
+                                style={{ height: (tableHeightWithoutTopNav), width: styles?.width }}
                                 ref={tableRef}
                                 tabIndex={-1}
                                 onKeyDown={onScrollByKeydown}
@@ -1350,7 +1381,7 @@ const Table = React.forwardRef(
                                     ref={mouseAreaRef}
                                     addPrefix={prefix}
                                     headerHeight={headerHeight}
-                                    height={ActualTableHeight}
+                                    height={tableHeightWithoutTopNav - paginationHeight}
                                 />
                             )}
 
