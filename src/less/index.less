@@ -59,12 +59,16 @@
 .bt {
     &-container {
         width: 100%;
-        overflow: hidden;
-        background: var(--bg-bt-container, red);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
     }
 
     &-wrapper {
         width: 100%;
+        overflow: hidden;
+        border-radius: 8px;
     }
 
     &-direction-aware-con {

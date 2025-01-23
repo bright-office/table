@@ -10,24 +10,40 @@ const CheckBox = ({ active, className, onClick, ...rest }: checkBoxProps) => {
         <input
             type="checkbox"
             {...rest}
-            // TODO: tailwind remove
-            className={("outline-none border-none appearance-none relative")}
+            style={{
+                outline: "none",
+                border: "none",
+                appearance: "none",
+                position: "relative",
+            }}
             ref={checkboxRef as LegacyRef<HTMLInputElement>}
         />
 
         <div
-            // TODO: tailwind remove
-            /* className={("cursor-pointer absolute inset-0 flex items-center justify-center", className)} */
+            style={{
+                cursor: "pointer",
+                position: "absolute",
+                inset: "0",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
             onClick={(e) => { onClick(e) }} >
             {active
+                ? <Icon name="checkedCheckbox" style={{ height: "18px" }} />
                 // TODO: tailwind remove
-                ? <Icon name="checkedCheckbox" className="h-[18px]" />
-                // TODO: tailwind remove
-                : <div className={(
-                    "unchecked h-[18px] aspect-square rounded-[4px] border-gray-200 bg-gray-100  border-[1px]"
-                    /* "group-hover:bg-gray-200 group-hover:border-gray-300" */
-                )}>
-                </div>}
+                : <div
+                    style={{
+                        height: "18px",
+                        aspectRatio: "1",
+                        borderRadius: "4px",
+                        border: "1px solid var(--border-color, #eee)",
+                        backgroundColor: "var(--bg-bt-checkbox-bg, #e8e8e8)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }} />
+            }
         </div>
     </div>
 }

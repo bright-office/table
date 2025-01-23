@@ -77,7 +77,7 @@ const SelectionCheckbox = memo((selectionCheckboxProps: SelectionCheckboxProps) 
     };
 
     const cellProps = {
-        width: ROW_SELECTION_COL_WIDTH - 2,
+        width: ROW_SELECTION_COL_WIDTH,
         left: 0,
         className: 'grid place-items-center group',
         onClick: handleRowSelection,

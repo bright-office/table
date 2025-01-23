@@ -1139,9 +1139,9 @@ const Table = React.forwardRef(
                         vertical
                         key="vertical-scrollbar"
                         tableId={id}
-                        length={height - headerHeight}
+                        length={height - (headerHeight + PAGINATION_HEIGHT)}
                         onScroll={onScrollVertical}
-                        scrollLength={contentHeight.current}
+                        scrollLength={contentHeight.current + PAGINATION_HEIGHT}
                         ref={scrollbarYRef}
                     />
                 );

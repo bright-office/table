@@ -85,6 +85,13 @@ function App() {
             <Table
                 rowSelection
                 headerHeight={80}
+                renderTableTopNav={() => {
+                    return (
+                        <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
+                            I am the nav
+                        </div>
+                    )
+                }}
                 isTree
                 rowKey={"id"}
                 pagination={{
@@ -142,8 +149,8 @@ function App() {
 
             </Table>
 
-            <StyleGuide />
-        </div>
+            {/* <StyleGuide /> */}
+        </div >
     )
 }
 
