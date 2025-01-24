@@ -1,22 +1,37 @@
 .bt-row {
     &-header {
-        background: var(--bt-header-bg);
+        background: var(--bt-header-row-bg);
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        color: var(--bt-header-row-color);
     }
 
     &-normal {
-        background: var(--bt-row-bg);
+        background: var(--bt-normal-row-bg);
+        color: var(--bt-normal-row-color);
 
         &:hover {
-            background: var(--bt-row-bg-hover);
+            background: var(--bt-normal-row-hover-bg);
         }
     }
 
     &:not(&-header):hover .bt-checkbox-unchecked {
-        background: var(--bt-checkbox-bg-hover);
+        background: var(--bt-checkbox-hover-bg);
     }
 
     &-expanded {
-        background: var(--bt-row-bg-expanded)
+        & .bt-checkbox-unchecked {
+            background: var(--bt-checkbox-hover-bg);
+        }
+
+        &:not(&-header):hover .bt-checkbox-unchecked {
+            background: var(--bt-checkbox-hover-bg);
+        }
+
+        background: var(--bt-expanded-row-bg);
+        color: var(--bt-expanded-row-color);
+
+        &:hover {
+            background: var(--bt-expanded-row-hover-bg);
+        }
     }
 }

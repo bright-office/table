@@ -35,7 +35,7 @@
             cursor: pointer;
 
             &:hover {
-                background: var(--bt-button-bg-hover);
+                background: var(--bt-button-hover-bg);
             }
 
             &-icon {
@@ -56,19 +56,19 @@
                 cursor: pointer;
                 font-size: var(--bt-font-size-normal);
 
-                &-active {
-                    background: var(--bt-button-bg-active);
-                    color: var(--bt-button-color-active);
+                &:hover {
+                    background: var(--bt-button-hover-bg);
+                    color: var(--bt-button-hover-color)
                 }
 
-                &:hover {
-                    background: var(--bt-button-bg-hover);
-                    color: var(--bt-button-color-hover)
+                &-active {
+                    background: var(--bt-button-active-bg);
+                    color: var(--bt-button-active-color);
                 }
 
                 &-active:hover {
-                    background: var(--bt-button-bg-active-hover);
-                    color: var(--bt-button-color-active-hover);
+                    background: var(--bt-button-active-hover-bg);
+                    color: var(--bt-button-active-hover-color);
                 }
 
             }
@@ -89,14 +89,13 @@
         width: 20px;
 
         &-disabled {
-            background: var(--bt-button-bg-disabled);
-            color: var(--bt-button-color-disabled);
+            background: var(--bt-button-disabled-bg);
             cursor: not-allowed;
         }
 
         &:not(&-disabled):hover {
-            background: var(--bt-button-bg-hover);
-            color: var(--bt-button-color-hover)
+            background: var(--bt-button-hover-bg);
+            color: var(--bt-button-hover-color);
         }
     }
 
@@ -125,8 +124,8 @@
             background: var(--bt-button-bg);
 
             &:hover {
-                background: var(--bt-button-bg-hover);
-                color: var(--bt-button-color-hover)
+                background: var(--bt-button-hover-bg);
+                color: var(--bt-button-hover-color);
             }
 
             &-unknown {
@@ -135,13 +134,13 @@
             }
 
             &-active {
-                background: var(--bt-button-bg-active);
-                color: var(--bt-button-color-active);
+                background: var(--bt-button-active-bg);
+                color: var(--bt-button-active-color);
             }
 
             &-active:hover {
-                background: var(--bt-button-bg-active-hover);
-                color: var(--bt-button-color-active-hover);
+                background: var(--bt-button-active-hover-bg);
+                color: var(--bt-button-active-hover-color);
             }
 
         }

@@ -109,7 +109,7 @@ function App() {
                         urlProp: "href"
                     }
                 }}
-                loading={loading}
+                loading={true}
                 shouldUpdateScroll={false}
                 data={data}
                 cellBordered
