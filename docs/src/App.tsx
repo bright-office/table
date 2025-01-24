@@ -23,54 +23,9 @@ function App() {
         "links": [
             {
                 "url": null,
-                "label": "&laquo; Previous",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=1",
-                "label": "1",
-                "active": true
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=2",
-                "label": "2",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=3",
-                "label": "3",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=4",
-                "label": "4",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=5",
-                "label": "5",
-                "active": false
-            },
-            {
-                "url": null,
                 "label": "...",
                 "active": false
             },
-            {
-                "url": "https://localschool.test/app/messages?page=69",
-                "label": "69",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=70",
-                "label": "70",
-                "active": false
-            },
-            {
-                "url": "https://localschool.test/app/messages?page=2",
-                "label": "Next &raquo;",
-                "active": false
-            }
         ],
         "next_page_url": "https://localschool.test/app/messages?page=2",
         "path": "https://localschool.test/app/messages",
@@ -109,7 +64,6 @@ function App() {
                         urlProp: "href"
                     }
                 }}
-                loading={true}
                 shouldUpdateScroll={false}
                 data={data}
                 cellBordered
