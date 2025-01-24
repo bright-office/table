@@ -83,7 +83,7 @@ function App() {
     return (
         <div className="p-20">
             <h1>
-                Multi Header with pagination
+                MP
             </h1>
 
             <Table
@@ -155,7 +155,7 @@ function App() {
             </Table>
 
             <h1>
-                Without Pagination multi header
+                MNP
             </h1>
 
             <Table
@@ -217,11 +217,11 @@ function App() {
             </Table>
 
             <h1>
-                Without pagination and without multi header
+                SP
             </h1>
 
             <Table
-                name="SNP"
+                name="SP"
                 rowSelection
                 renderTableTopNav={() => {
                     return (
@@ -229,6 +229,17 @@ function App() {
                             I am the nav
                         </div>
                     )
+                }}
+
+                pagination={{
+                    serverResponse,
+                    onRowsPerPageChange(newRowPerPage) {
+                        console.log(newRowPerPage)
+                    },
+                    linkComponent: {
+                        element: <a />,
+                        urlProp: "href"
+                    }
                 }}
                 isTree
                 rowKey={"id"}
@@ -271,15 +282,14 @@ function App() {
                         )}
                     </Cell>
                 </Column>
-
             </Table>
 
             <h1>
-                With pagination single header
+                SNP
             </h1>
 
             <Table
-                name="SP"
+                name="SNP"
                 rowSelection
                 renderTableTopNav={() => {
                     return (
@@ -287,17 +297,6 @@ function App() {
                             I am the nav
                         </div>
                     )
-                }}
-
-                pagination={{
-                    serverResponse,
-                    onRowsPerPageChange(newRowPerPage) {
-                        console.log(newRowPerPage)
-                    },
-                    linkComponent: {
-                        element: <a />,
-                        urlProp: "href"
-                    }
                 }}
                 isTree
                 rowKey={"id"}

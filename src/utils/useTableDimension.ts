@@ -78,9 +78,9 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
 
     // accounting for table top height.
     const tableNavContainer = document.querySelector("#bt-table-top-nav");
-    const tableNavHeight = tableNavContainer
+    const tableNavHeight = (tableNavContainer
         ? tableNavContainer.getBoundingClientRect().height
-        : 0;
+        : 0);
 
     const contentHeight = useRef(0);
     const contentWidth = useRef(0);
@@ -358,7 +358,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
             return props.height;
         }
 
-        const height = autoHeightProp ? headerHeight + contentHeight.current : props.height;
+        const height = autoHeightProp ? headerHeight + contentHeight.current : props.height - headerHeight;
 
         if (maxHeight && height > maxHeight) {
             return maxHeight;

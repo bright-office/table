@@ -57,7 +57,6 @@ import "./less/index.less";
 import Pagination from './Pagination';
 import { paginationProps } from './Pagination';
 import { rowSelectionState, RowSelectionWrapper } from './utils/useRowSelection';
-import { PAGINATION_HEIGHT } from './utils/useTableDimension';
 
 export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     extends Omit<StandardProps, 'onScroll' | 'children'> {
@@ -706,15 +705,20 @@ const Table = React.forwardRef(
         const paginationRef = useRef<HTMLDivElement>(null);
 
         const [calculatedTableHeight, setCalculatedTableHeight] = useState({
-            tableHeightWithoutTopNav: styles.height,
-            tableHeightWithoutPagination: styles.height,
+            tableHeightWithoutTopNav: getTableHeight(),
+            tableHeightWithoutPagination: getTableHeight(),
             tableTopNavHeight: 0,
             paginationHeight: 0,
         });
 
+        const {
+            paginationHeight,
+            tableHeightWithoutTopNav
+        } = calculatedTableHeight;
+
         useEffect(() => {
-            let tableHeightWithoutPagination = styles?.height as number;
-            let tableHeightWithoutTopNav = styles?.height as number;
+            let tableHeightWithoutPagination = getTableHeight();
+            let tableHeightWithoutTopNav = getTableHeight();
 
             setCalculatedTableHeight((prev) => {
                 let tableTopNavHeight = 0;
@@ -727,7 +731,6 @@ const Table = React.forwardRef(
 
                 if (renderTableTopNav) {
                     tableTopNavHeight = tableTopNavRef.current?.getBoundingClientRect().height || 0;
-                    tableHeightWithoutTopNav -= tableTopNavHeight ?? 0;
                 }
 
                 if (!tableTopNavHeight && !paginationHeight)
@@ -927,7 +930,6 @@ const Table = React.forwardRef(
         };
 
         const renderTableHeader = (headerCells: any[], rowWidth: number) => {
-            const top = typeof affixHeader === 'number' ? affixHeader : 0;
             const rowProps: TableRowProps = {
                 'aria-rowindex': 1,
                 rowRef: tableHeaderRef,
@@ -940,11 +942,8 @@ const Table = React.forwardRef(
             };
 
             const fixedStyle: React.CSSProperties = {
-                position: 'fixed',
                 overflow: 'hidden',
-                height: headerHeight,
                 width: tableWidth.current,
-                top
             };
 
             // Affix header
@@ -1036,14 +1035,12 @@ const Table = React.forwardRef(
         ) => {
 
             // handling the nested row condition
-
             // tree parent
             const NestedRowData = rowData?.children;
             const hasChildren = isTree && NestedRowData && (Array.isArray(NestedRowData) && NestedRowData.length > 0);
             const childrenIds = hasChildren
                 ? (rowData.children as Record<string, any>[]).map((data: Record<string, any>) => data?.id as string)
                 : [];
-
 
             const treeChildInfo = {
                 parentId: undefined,
@@ -1166,9 +1163,9 @@ const Table = React.forwardRef(
                         vertical
                         key="vertical-scrollbar"
                         tableId={id}
-                        length={tableHeightWithoutTopNav - paginationHeight}
+                        length={tableHeightWithoutTopNav - (paginationHeight + headerHeight)}
                         onScroll={onScrollVertical}
-                        scrollLength={contentHeight.current}
+                        scrollLength={contentHeight.current + headerHeight}
                         ref={scrollbarYRef}
                     />
                 );
@@ -1177,10 +1174,8 @@ const Table = React.forwardRef(
             return scrollbars;
         };
 
-
         const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
-            const bodyHeight = tableHeightWithoutTopNav - paginationHeight;
-            console.log({ tableHeightWithoutTopNav, paginationHeight, n: props.name })
+            const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);
 
             const bodyStyles = {
                 top: headerHeight,
@@ -1338,7 +1333,7 @@ const Table = React.forwardRef(
             <RowSelectionWrapper>
                 <TableContext.Provider value={contextValue}>
                     <div
-                        className="bt-container bt-space-y-2.5 bt-overflow-hidden"
+                        className="bt-container"
                         style={{
                             height: style?.height,
                             width: style?.width
@@ -1356,7 +1351,8 @@ const Table = React.forwardRef(
                             style={{
                                 ...style,
                                 width: styles.width,
-                                height: (tableHeightWithoutTopNav)
+                                height: (tableHeightWithoutTopNav),
+                                border: '1px solid var(--border-color, red)'
                             }}>
 
                             <div
@@ -1367,7 +1363,12 @@ const Table = React.forwardRef(
                                 aria-colcount={colCounts.current}
                                 {...rest}
                                 className={classes}
-                                style={{ height: (tableHeightWithoutTopNav), width: styles?.width }}
+                                id={"tablecon"}
+                                style={{
+                                    height: tableHeightWithoutTopNav - (paginationHeight),
+                                    width: styles?.width,
+                                    overflow: 'hidden'
+                                }}
                                 ref={tableRef}
                                 tabIndex={-1}
                                 onKeyDown={onScrollByKeydown}
@@ -1375,16 +1376,16 @@ const Table = React.forwardRef(
                                 {showHeader && renderTableHeader(headerCells, rowWidth)}
                                 {children && <RenderTableBody bodyCells={bodyCells} rowWidth={rowWidth} />}
                             </div>
+
                             {pagination ? renderDefaultPagination() : null}
                             {showHeader && (
                                 <MouseArea
                                     ref={mouseAreaRef}
                                     addPrefix={prefix}
                                     headerHeight={headerHeight}
-                                    height={tableHeightWithoutTopNav - paginationHeight}
+                                    height={tableHeightWithoutTopNav - (paginationHeight)}
                                 />
                             )}
-
                         </div>
                     </div>
                 </TableContext.Provider>
