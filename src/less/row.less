@@ -1,0 +1,22 @@
+.bt-row {
+    &-header {
+        background: var(--bt-header-bg);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    &-normal {
+        background: var(--bt-row-bg);
+
+        &:hover {
+            background: var(--bt-row-bg-hover);
+        }
+    }
+
+    &:not(&-header):hover .bt-checkbox-unchecked {
+        background: var(--bt-checkbox-bg-hover);
+    }
+
+    &-expanded {
+        background: var(--bt-row-bg-expanded)
+    }
+}

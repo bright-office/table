@@ -11,51 +11,74 @@
         justify-content: space-between;
         padding: 10px;
         height: 100%;
-        background: var(--bg-bt-pagination-container, white);
+        background: var(--bt-base-bg);
+        font-size: var(--bt-font-size-normal);
     }
 
-    &-rpp-con {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 4px;
-    }
+    &-rpp {
+        &-con {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+        }
 
-    &-rpp-sb {
-        background: var(--bg-bt-pagination-rpp-sb, gray);
-        border-radius: 4px;
-        padding: 4px;
-        height: 20px;
-        font-size: 14px;
-        gap: 2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+        &-sb {
+            background: var(--bt-button-bg);
+            border-radius: 4px;
+            padding: 4px;
+            height: 20px;
+            gap: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
 
-    &-rpp-sb-icon {
-        transform: rotate(90deg);
-        height: 10px;
-        width: 10px;
-    }
+            &:hover {
+                background: var(--bt-button-bg-hover);
+            }
 
-    &-rpp-sb-option {
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
+            &-icon {
+                transform: rotate(90deg);
+                height: 10px;
+                width: 10px;
+            }
 
-    &-rpp-sb-option-active {
-        background: var(--bg-bt-pagination-rpp-sb-option-active, blue);
+            &-options-con {
+                background: var(--bt-base-bg);
+            }
+
+            &-option {
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-size: var(--bt-font-size-normal);
+
+                &-active {
+                    background: var(--bt-button-bg-active);
+                    color: var(--bt-button-color-active);
+                }
+
+                &:hover {
+                    background: var(--bt-button-bg-hover);
+                    color: var(--bt-button-color-hover)
+                }
+
+                &-active:hover {
+                    background: var(--bt-button-bg-active-hover);
+                    color: var(--bt-button-color-active-hover);
+                }
+
+            }
+        }
+
     }
 
     &-arrow-btn {
-        background: var(--bg-bt-pagination-btn, gray);
-        border-radius: 4px;
+        background: var(--bt-button-bg);
+        color: var(--bt-button-color);
         padding: 4px;
         display: flex;
         align-items: center;
@@ -64,11 +87,17 @@
         border-radius: 4px;
         height: 20px;
         width: 20px;
-    }
 
-    &-arrow-btn-disabled {
-        background: var(--bg-bt-pagination-btn-disabled, white);
-        cursor: not-allowed;
+        &-disabled {
+            background: var(--bt-button-bg-disabled);
+            color: var(--bt-button-color-disabled);
+            cursor: not-allowed;
+        }
+
+        &:not(&-disabled):hover {
+            background: var(--bt-button-bg-hover);
+            color: var(--bt-button-color-hover)
+        }
     }
 
     &-ps {
@@ -82,26 +111,39 @@
         align-items: center;
         gap: 4px;
         font-size: 12px;
-    }
 
-    &-nps-btn {
-        text-decoration: none;
-        height: 20px;
-        width: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        padding: 4px;
-        color: var(--bg-bt-pagination-btn, white);
-        background: var(--bg-bt-pa-btn, red);
-    }
+        &-btn {
+            text-decoration: none;
+            height: 20px;
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            padding: 4px;
+            color: var(--bt-button-color);
+            background: var(--bt-button-bg);
 
-    &-nps-btn-normal {
-        background: var(--bg-bt-pagination-btn, gray);
-    }
+            &:hover {
+                background: var(--bt-button-bg-hover);
+                color: var(--bt-button-color-hover)
+            }
 
-    &-nps-btn-active {
-        background: var(--bg-bt-pagination-btn-active, blue);
+            &-unknown {
+                background: transparent;
+                color: var(--bt-button-color);
+            }
+
+            &-active {
+                background: var(--bt-button-bg-active);
+                color: var(--bt-button-color-active);
+            }
+
+            &-active:hover {
+                background: var(--bt-button-bg-active-hover);
+                color: var(--bt-button-color-active-hover);
+            }
+
+        }
     }
 }

@@ -31,14 +31,12 @@ const CheckBox = ({ active, className, onClick, ...rest }: checkBoxProps) => {
             onClick={(e) => { onClick(e) }} >
             {active
                 ? <Icon name="checkedCheckbox" style={{ height: "18px" }} />
-                // TODO: tailwind remove
                 : <div
+                    className="bt-checkbox-unchecked"
                     style={{
                         height: "18px",
                         aspectRatio: "1",
                         borderRadius: "4px",
-                        border: "1px solid var(--border-color, #eee)",
-                        backgroundColor: "var(--bg-bt-checkbox-bg, #e8e8e8)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",

@@ -27,12 +27,20 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
         rowRef,
         children,
         rowSpan,
+        "data-depth": depth = 0,
         ...rest
-    } = props;
+    } = props as RowProps & {
+        "data-depth"?: number
+    };
 
     const { translateDOMPositionXY } = useContext(TableContext);
     const { withClassPrefix, merge } = useClassNames(classPrefix);
-    const classes = merge(className, withClassPrefix({ header: isHeaderRow, rowspan: rowSpan }));
+
+    const classes = merge(className,
+        withClassPrefix({ header: isHeaderRow, rowspan: rowSpan }),
+        isHeaderRow ? "bt-row-header" : "bt-row-normal",
+        depth > 0 ? "bt-row-expanded" : "bt-row"
+    );
 
     const styles = {
         minWidth: width,

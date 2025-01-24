@@ -2,6 +2,8 @@
     position: relative;
     font-size: 14px;
     font-weight: 300;
+    overflow: hidden;
+    border-radius: 5px;
 
     &-column-resizing {
         cursor: ew-resize;
@@ -16,26 +18,9 @@
         transition: none;
     }
 
-    &-hover &-body-row-wrapper &-row:hover {
-        background: var(--row-hover-color);
-    }
-
-    &-hover &-body-row-wrapper &-row:hover &-cell-group {
-        background: var(--row-hover-color);
-    }
-
-    &-hover &-body-row-wrapper &-row:hover &-cell {
-        background: var(--row-hover-color);
-    }
-
     &-row-header {
-        background: var(--head-background);
         font-weight: 400;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    &-row-header &-cell {
-        background: var(--head-background);
+        border-bottom: 1px solid var(--bt-border-color);
     }
 
     &-row-header &-cell-group-shadow {
@@ -86,7 +71,6 @@
         overflow: hidden;
         position: absolute;
         white-space: normal;
-        background: var(--body-background);
         transition: none;
         box-sizing: border-box;
 
@@ -140,30 +124,15 @@
         }
     }
 
-    &-column-resize-spanner {
-        height: 36px;
-        width: 6px;
-        z-index: 3;
-        position: absolute;
-        cursor: ew-resize !important;
-        outline: none;
-
-        &:hover {
-            background: var(--resize-mouse-color);
-        }
-    }
-
     &-cell-group {
         &-fixed-left {
             position: absolute;
             z-index: 4;
-            background: var(--body-background);
         }
 
         &-fixed-right {
             position: absolute;
             z-index: 4;
-            background: var(--body-background);
         }
 
         &-left-shadow {
@@ -178,7 +147,6 @@
 
     &-mouse-area {
         display: none;
-        background: var(--resize-mouse-color);
         left: -1px;
         top: 0;
         position: absolute;
@@ -187,22 +155,11 @@
     }
 
     &-cell-bordered &-cell {
-        border-right: 1px solid #eee;
+        border-right: 1px solid var(--bt-border-color);
     }
 
     &-word-wrap &-cell-content {
         white-space: normal;
-    }
-
-    &-row-expanded {
-        position: absolute;
-        height: 46px;
-        bottom: 0;
-        width: 100%;
-        z-index: 4;
-        border-top: 1px solid #eee;
-        padding: 10px;
-        background: #f5f5f5;
     }
 
     &-loader-wrapper {

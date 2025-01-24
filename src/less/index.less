@@ -1,32 +1,111 @@
 @import "./pagination.less";
 @import "./header.less";
+@import "./cell.less";
+@import "./row.less";
 
 :root {
+    color-scheme: light dark;
     --prefix: bright-;
-    --border-color: #eee;
-    --head-background: #fff;
-    --body-background: #fff;
-    --pagination-background: #f5f5f5;
-    --resize-mouse-color: #34c3ff;
-    --row-hover-color: #f2faff;
-    --row-active-color: #E0EEFF;
-    --text-primary: #566E86;
 
-    /**Bright colors **/
-    --blue-primary-500: #1B84FF;
+    --bt-base-bg-light: #fff;
+    --bt-base-bg-dark: #000000;
+    --bt-base-bg: light-dark(var(--bt-base-bg-light), var(--bt-base-bg-dark));
 
-    /* Loader */
-    --loader-spin-ring-wide: 3px;
-    --loader-spin-ring-color: fade(#f7f7fa, 80);
-    --loader-spin-ring-active-color: #a6a6a6;
-    --loader-duration-normal: 0.6s;
+    --bt-border-color-light: #e8e8e8;
+    --bt-border-color-dark: #1b1b1b;
+    --bt-border-color: light-dark(var(--bt-border-color-light), var(--bt-border-color-dark));
 
-    --bg-bt-expand-icon: #0F629D;
-    --bg-bt-expand-icon-hover: #0F629D;
-    --bg-bt-expand-icon-con: transparent;
-    --bg-bt-expand-icon-con-hover: #e8e8e8;
+    --bt-checkbox-bg-light: #e8e8e8;
+    --bt-checkbox-bg-dark: #333;
+    --bt-checkbox-bg: light-dark(var(--bt-checkbox-bg-light), var(--bt-checkbox-bg-dark));
+
+    --bt-checkbox-bg-hover-light: #bcbcbc;
+    --bt-checkbox-bg-hover-dark: #333;
+    --bt-checkbox-bg-hover: light-dark(var(--bt-checkbox-bg-hover-light), var(--bt-checkbox-bg-hover-dark));
+
+    // Row Background
+    --bt-row-bg-light: #fff;
+    --bt-row-bg-dark: #000000;
+    --bt-row-bg: light-dark(var(--bt-row-bg-light), var(--bt-row-bg-dark));
+
+    --bt-base-bg-light: #fff;
+    --bt-base-bg-dark: #000000;
+    --bt-base-bg: light-dark(var(--bt-base-bg-light), var(--bt-base-bg-dark));
+
+    --bt-row-bg-hover-light: #E0EEFF;
+    --bt-row-bg-hover-dark: #041529;
+    --bt-row-bg-hover: light-dark(var(--bt-row-bg-hover-light), var(--bt-row-bg-hover-dark));
+
+    --bt-row-bg-expanded-light: #e8e8e8;
+    --bt-row-bg-expanded-dark: #1b1b1b;
+    --bt-row-bg-expanded: light-dark(var(--bt-row-bg-expanded-light), var(--bt-row-bg-expanded-dark));
+
+    --bt-header-bg-light: #fff;
+    --bt-header-bg-dark: #000000;
+    --bt-header-bg: light-dark(var(--bt-header-bg-light), var(--bt-header-bg-dark));
+
+    // General icon color.
+    // Defining this icon color will set the icon and bg color for all icons in the table. 
+    // --bt-icon-color-light: #333;
+    // --bt-icon-color-dark: #fff;
+    // --bt-icon-bg-light: #e8e8e8;
+    // --bt-icon-bg-dark: #1b1b1b;
+
+    // Header customization icon color.
+    --bt-cust-icon-color-light: var(--bt-icon-color-light, #333);
+    --bt-cust-icon-color-dark: var(--bt-icon-color-dark, #fff);
+    --bt-cust-icon-color: light-dark(var(--bt-cust-icon-color-light), var(--bt-cust-icon-color-dark));
+
+    // Header customization icon bg.
+    --bt-cust-icon-bg-light: var(--bt-icon-bg-light, #e8e8e8);
+    --bt-cust-icon-bg-dark: var(--bt-icon-bg-dark, #1b1b1b);
+    --bt-cust-icon-bg: light-dark(var(--bt-cust-icon-bg-light), var(--bt-cust-icon-bg-dark));
+
+    // row expansion icon color.
+    --bt-row-expand-icon-color-light: var(--bt-icon-color-light, #333);
+    --bt-row-expand-icon-color-dark: var(--bt-icon-color-dark, #fff);
+    --bt-row-expand-icon-color: light-dark(var(--bt-row-expand-icon-color-light), var(--bt-row-expand-icon-color-dark));
+
+    // row expansion icon bg.
+    --bt-row-expand-icon-bg-light: var(--bt-icon-bg-light, #cae2ff);
+    --bt-row-expand-icon-bg-dark: var(--bt-icon-bg-dark, #505a67);
+    --bt-row-expand-icon-bg: light-dark(var(--bt-row-expand-icon-bg-light), var(--bt-row-expand-icon-bg-dark));
+
+    // button styles
+    --bt-button-bg-light: #e8e8e8;
+    --bt-button-bg-dark: #1b1b1b;
+    --bt-button-bg: light-dark(var(--bt-button-bg-light), var(--bt-button-bg-dark));
+    --bt-button-color-light: #333;
+    --bt-button-color-dark: #fff;
+    --bt-button-color: light-dark(var(--bt-button-color-light), var(--bt-button-color-dark));
+
+    // hover normal button
+    --bt-button-bg-light-hover: #d8d8d8;
+    --bt-button-bg-dark-hover: #4e4e4e;
+    --bt-button-bg-hover: light-dark(var(--bt-button-bg-light-hover), var(--bt-button-bg-dark-hover));
+    --bt-button-color-light-hover: #333;
+    --bt-button-color-dark-hover: #fff;
+    --bt-button-color-hover: light-dark(var(--bg-button-color-light-hover), var(--bg-button-color-dark-hover));
+
+    // disabled button 
+    --bt-button-bg-disabled-light: #f8f8f8;
+    --bt-button-bg-disabled-dark: #000000;
+    --bt-button-bg-disabled: light-dark(var(--bt-button-bg-disabled-light), var(--bt-button-bg-disabled-dark));
+    --bt-button-color-disabled-light: #efefef;
+    --bt-button-color-disabled-dark: #1c1c1c;
+    --bt-button-color-disabled: light-dark(var(--bt-button-color-disabled), var(--bt-button-color-disabled-dark));
+
+    // active button 
+    --bt-button-color-active: #fff;
+    --bt-button-bg-active: #1B84FF;
+    --bt-button-color-active-hover: #fff;
+    --bt-button-bg-active-hover: #499DFF;
+
+    // Font sizes
+    --bt-font-size-normal: 14px;
+    --bt-font-size-lg: 16px;
+    --bt-font-size-sm: 12px;
 }
-
 
 .bright {
     @import './functions.less';
@@ -37,26 +116,6 @@
     @import './column-group.less';
 }
 
-
-.bt-expansion {
-    &-icon {
-        background: var(--bg-bt-expand-icon);
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        padding: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-
-    &-icon:hover {
-        background: var(--bg-bt-expand-icon-hover);
-    }
-}
-
 .bt {
     &-container {
         width: 100%;
@@ -64,23 +123,20 @@
         flex-direction: column;
         gap: 10px;
         justify-content: center;
-        background: red;
     }
 
     &-wrapper {
         width: 100%;
         overflow: hidden;
         border-radius: 8px;
-        background: blue;
-        border: 1px solid var(--color-table-border, #333)
+        background: var(--bt-base-bg);
+        border: 1px solid var(--bt-border-color);
     }
 
     &-direction-aware-con {
-        background: var(--bg-bt-direction-aware-con, white);
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--bt-border-color);
         border-radius: 4px;
         padding: 4px;
-        border-radius: 4px;
         position: fixed;
         top: 0;
         left: 0;

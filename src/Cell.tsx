@@ -171,42 +171,46 @@ const Cell = React.forwardRef(
         const ExpandedIcon = <svg
             width="100%"
             height="100%"
-            className="-bt-rotate-90 bt-text-[var(--bg-bt-expand-icon)] hover:bt-text-[var(--bg-bt-expand-icon)]"
+            className=" bt-cell-expand-icon bt-cell-expand-icon-expanded"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M9.85031 14.2932C11.4784 14.5437 15.5131 9.82024 17.5581 7.27144C18.074 6.62843 17.6108 5.69724 16.7864 5.69724L3.25537 5.69728C2.42339 5.69728 1.96363 6.64709 2.49235 7.28946C4.48139 9.70602 8.25044 14.0471 9.85031 14.2932Z"
-                fill="currentColor" />
+                fill="currentColor"
+            />
         </svg>
 
         const CollapsedIcon = <svg
             width="100%"
             height="100%"
-            className="-bt-rotate-90 bt-text-[var(--bg-bt-expand-icon)]  hover:bt-text-[var(--bg-bt-expand-icon)]"
+            className="bt-cell-expand-icon bt-cell-expand-icon-collapsed"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.85031 14.2932C11.4784 14.5437 15.5131 9.82024 17.5581 7.27144C18.074 6.62843 17.6108 5.69724 16.7864 5.69724L3.25537 5.69728C2.42339 5.69728 1.96363 6.64709 2.49235 7.28946C4.48139 9.70602 8.25044 14.0471 9.85031 14.2932Z" fill="currentColor" />
+            <path
+                d="M9.85031 14.2932C11.4784 14.5437 15.5131 9.82024 17.5581 7.27144C18.074 6.62843 17.6108 5.69724 16.7864 5.69724L3.25537 5.69728C2.42339 5.69728 1.96363 6.64709 2.49235 7.28946C4.48139 9.70602 8.25044 14.0471 9.85031 14.2932Z"
+                fill="currentColor"
+            />
         </svg>
 
         const renderTreeNodeExpandIcon = () => {
             const expandIconComponent = expanded ? ExpandedIcon : CollapsedIcon;
-
             if (isTreeCol && hasChildren) {
                 return (
                     <span
                         role="button"
                         tabIndex={-1}
-                        className='bt-expansion-icon'
+                        className='bt-cell-expansion-con'
                         onClick={handleTreeToggle}>
                         {expandIconComponent}
                     </span>
                 );
             }
 
-            {/* TODO: tailwind remove */ }
-            return <span className='bt-w-6'>
+            return <span style={{
+                width: 24,
+            }}>
             </span>;
         };
 

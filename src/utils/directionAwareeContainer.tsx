@@ -138,9 +138,11 @@ const DirectionAwareContainer = (props: directionAwareContainerProps) => {
     return createPortal(
         (<div
             ref={contentRef}
-            className={(`bt-direction-aware-con 
-                         ${props.active && "bt-direction-aware-con-active"} `
-            )}>
+            className={(`
+                        bt-direction-aware-con 
+                        ${props.active && "bt-direction-aware-con-active"} 
+                        ${props.className}
+            `)}>
             {props.children}
         </div >), document.body);
 };

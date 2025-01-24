@@ -921,7 +921,6 @@ const Table = React.forwardRef(
                 );
             }
 
-
             return (
                 <Row {...restRowProps} data-depth={depth} style={rowStyles}>
                     {renderRowProp ? renderRowProp(rowNode, rowData) : rowNode}
@@ -1352,7 +1351,6 @@ const Table = React.forwardRef(
                                 ...style,
                                 width: styles.width,
                                 height: (tableHeightWithoutTopNav),
-                                border: '1px solid var(--border-color, red)'
                             }}>
 
                             <div
@@ -1363,7 +1361,6 @@ const Table = React.forwardRef(
                                 aria-colcount={colCounts.current}
                                 {...rest}
                                 className={classes}
-                                id={"tablecon"}
                                 style={{
                                     height: tableHeightWithoutTopNav - (paginationHeight),
                                     width: styles?.width,

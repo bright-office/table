@@ -50,7 +50,7 @@ const RowPerPageSwitcher = (props: rowPerPageSwitcherProps) => {
                             props.onChange(option);
                         }}
                         className={`bt-pagination-rpp-sb-option 
-                            ${option == props.selectedOption && "bt-pagination-rpp-sb-option-active"}
+                            ${option == active && "bt-pagination-rpp-sb-option-active"}
                             `}
                     >
                         {option}
@@ -215,7 +215,6 @@ const Pagination = (props: paginationProps) => {
     }
 
     const NumberedSwitcher = () => {
-        // TODO: tailwind remove
         return <div className={(prefix("numbered-switcher"), "bt-pagination-nps")}>
             {serverResponse.links.slice(1, serverResponse.links.length - 1).map((link, index) => {
                 const isDisabled = link.active;
@@ -230,7 +229,7 @@ const Pagination = (props: paginationProps) => {
                     "aria-disabled": link.active,
                     className: `
                     bt-pagination-nps-btn
-                    ${(link.label !== "...") && "bt-pagination-nps-btn-normal"} 
+                    ${(link.label === "...") && "bt-pagination-nps-btn-unknown"} 
                     ${isDisabled && "bt-pagination-nps-btn-disabled"} 
                     ${link.active && "bt-pagination-nps-btn-active"}`,
                     children: link.label
@@ -238,7 +237,7 @@ const Pagination = (props: paginationProps) => {
             })}
         </div>
     }
-    {/* "bt-[font-weight:300px] bt-text-[14px] bt-text-gray-600 bt-h-16 bt-w-full" */ }
+
     return (
         <div className={("bt-pagination-container")} >
             <div className={prefix("status")}>
