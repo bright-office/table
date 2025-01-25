@@ -120,7 +120,7 @@ export type rowsPerPageOptions = number[];
 
 export const defaultRowsPerPageOptions = [10, 25, 50, 75, 100];
 
-const Pagination = (props: paginationProps) => {
+const Pagination = React.forwardRef<HTMLDivElement, paginationProps>((props, ref) => {
     const {
         serverResponse,
         onRowsPerPageChange,
@@ -239,7 +239,10 @@ const Pagination = (props: paginationProps) => {
     }
 
     return (
-        <div className={("bt-pagination-container")} >
+        <div
+            ref={ref}
+            className={("bt-pagination-container")}
+        >
             <div className={prefix("status")}>
                 {statusString}
             </div>
@@ -265,7 +268,7 @@ const Pagination = (props: paginationProps) => {
             </div>
         </div>
     )
-};
+});
 
 Pagination.displayName = 'Pagination';
 Pagination.prototype = {

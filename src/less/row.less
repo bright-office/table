@@ -1,15 +1,27 @@
 .bt-row {
     &-header {
-        background: var(--bt-header-row-bg);
-        color: var(--bt-header-row-color);
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-header-row-bg);
+            color: var(--bt-header-row-color);
+        }
     }
 
     &-normal {
-        background: var(--bt-normal-row-bg);
         color: var(--bt-normal-row-color);
 
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-normal-row-bg);
+        }
+
         &:hover {
-            background: var(--bt-normal-row-hover-bg);
+
+            .bright-table-cell,
+            .bright-table-cell-group {
+                background: var(--bt-normal-row-hover-bg);
+            }
         }
     }
 
@@ -26,11 +38,18 @@
             background: var(--bt-checkbox-hover-bg);
         }
 
-        background: var(--bt-expanded-row-bg);
-        color: var(--bt-expanded-row-color);
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-expanded-row-bg);
+            color: var(--bt-expanded-row-color);
+        }
 
         &:hover {
-            background: var(--bt-expanded-row-hover-bg);
+
+            .bright-table-cell,
+            .bright-table-cell-group {
+                background: var(--bt-expanded-row-hover-bg);
+            }
         }
     }
 }
