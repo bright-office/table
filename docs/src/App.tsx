@@ -110,7 +110,7 @@ function App() {
                     }
                 }}
                 loading={true}
-                shouldUpdateScroll={false}
+                shouldUpdateScroll={true}
                 data={data}
                 cellBordered
                 height={innerHeight - 200}

@@ -48,7 +48,6 @@ import type {
     TableLocaleType,
     TableSizeChangeEventName,
     RowDataType,
-    OptionalRecord
 } from './@types/common';
 import { flattenChildren } from './utils/children';
 
@@ -192,6 +191,24 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     **/
     virtualized?: boolean;
 
+    /**
+     * Control whether to strip rows or not 
+     * To control the stripe color, change the css variable
+     * ``` css
+     * --bt-striped-row-bg: background;
+     *  ```
+     */
+    stripeRows?: boolean;
+
+    /**
+     * Control whether to strip extended rows or not in tree table
+     * To control the stripe color, change the css variable
+     * ``` css
+     * --bt-striped-extended-row-bg: background;
+     *  ```
+     */
+    stripeExtendedRows?: boolean;
+
     /** Tree table, the callback function in the expanded node */
     renderTreeToggle?: (
         expandButton: React.ReactNode,
@@ -247,9 +264,6 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
      **/
     bodyRef?: (ref: HTMLElement) => void;
 
-    /** Additional theme configuration for custom theme. */
-    theme?: themeObject;
-
     /**
      * Server side laravel pagination.
      */
@@ -294,33 +308,6 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     }) => React.ReactNode | React.ReactNode[]);
 
 }
-
-export type themeObject = OptionalRecord<
-    "border-color"
-    | "head-background"
-    | "body-background"
-    | "pagination-background"
-    | "resize-mouse-color"
-    | "row-hover-color"
-    | "row-active-color"
-    | "text-primary"
-
-    | "border-color-dark"
-    | "head-background-dark"
-    | "body-background-dark"
-    | "pagination-background-dark"
-    | "resize-mouse-color-dark"
-    | "row-hover-color-dark"
-    | "row-active-color-dark"
-    | "text-primary-dark"
-    | "loader-spin-ring-color-dark"
-    | "loader-spin-ring-active-color-dark"
-
-    | "loader-spin-ring-wide"
-    | "loader-spin-ring-color"
-    | "loader-spin-ring-active-color"
-    | "loader-duration-normal"
-    , string>
 
 interface TableRowProps extends RowProps {
     key?: string | number;
