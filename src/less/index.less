@@ -12,164 +12,167 @@
     @import './column-group.less';
 }
 
-:root {
-    --prefix: bright-;
+@layer bt {
+    :root {
+        --prefix: bright-;
 
-    --bt-base-bg-light: #fff;
-    --bt-base-bg-dark: #000000;
-    --bt-base-bg: light-dark(var(--bt-base-bg-light), var(--bt-base-bg-dark));
+        --bt-base-bg-light: #fff;
+        --bt-base-bg-dark: #000000;
+        --bt-base-bg: light-dark(var(--bt-base-bg-light), var(--bt-base-bg-dark));
 
-    --bt-border-color-light: #e8e8e8;
-    --bt-border-color-dark: #1b1b1b;
-    --bt-border-color: light-dark(var(--bt-border-color-light), var(--bt-border-color-dark));
+        --bt-border-color-light: #e8e8e8;
+        --bt-border-color-dark: #1b1b1b;
+        --bt-border-color: light-dark(var(--bt-border-color-light), var(--bt-border-color-dark));
 
-    --bt-checkbox-bg-light: #e8e8e8;
-    --bt-checkbox-bg-dark: #333;
-    --bt-checkbox-bg: light-dark(var(--bt-checkbox-bg-light), var(--bt-checkbox-bg-dark));
+        --bt-checkbox-bg-light: #e8e8e8;
+        --bt-checkbox-bg-dark: #333;
+        --bt-checkbox-bg: light-dark(var(--bt-checkbox-bg-light), var(--bt-checkbox-bg-dark));
 
-    --bt-checkbox-hover-bg-light: #bcbcbc;
-    --bt-checkbox-hover-bg-dark: #333;
-    --bt-checkbox-hover-bg: light-dark(var(--bt-checkbox-hover-bg-light), var(--bt-checkbox-hover-bg-dark));
+        --bt-checkbox-hover-bg-light: #bcbcbc;
+        --bt-checkbox-hover-bg-dark: #333;
+        --bt-checkbox-hover-bg: light-dark(var(--bt-checkbox-hover-bg-light), var(--bt-checkbox-hover-bg-dark));
 
-    /** Row Background colors */
-    // Default / global
-    // --bt-row-bg-light: #fff;
-    // --bt-row-bg-dark: #000000;
-    // --bt-row-bg: light-dark(var(--bt-row-bg-light), var(--bt-row-bg-dark));
+        /** Row Background colors */
+        // Default / global
+        // --bt-row-bg-light: #fff;
+        // --bt-row-bg-dark: #000000;
+        // --bt-row-bg: light-dark(var(--bt-row-bg-light), var(--bt-row-bg-dark));
 
-    --bt-normal-row-bg-light: var(--bt-row-bg-light, #fff);
-    --bt-normal-row-bg-dark: var(--bt-row-bg-dark, #000000);
-    --bt-normal-row-bg: light-dark(var(--bt-normal-row-bg-light), var(--bt-normal-row-bg-dark));
+        --bt-normal-row-bg-light: var(--bt-row-bg-light, #fff);
+        --bt-normal-row-bg-dark: var(--bt-row-bg-dark, #000000);
+        --bt-normal-row-bg: light-dark(var(--bt-normal-row-bg-light), var(--bt-normal-row-bg-dark));
 
-    --bt-expanded-row-bg-light: var(--bt-row-bg-light, #e8e8e8);
-    --bt-expanded-row-bg-dark: var(--bt-row-bg-dark, #191919);
-    --bt-expanded-row-bg: light-dark(var(--bt-expanded-row-bg-light), var(--bt-expanded-row-bg-dark));
+        --bt-expanded-row-bg-light: var(--bt-row-bg-light, #e8e8e8);
+        --bt-expanded-row-bg-dark: var(--bt-row-bg-dark, #191919);
+        --bt-expanded-row-bg: light-dark(var(--bt-expanded-row-bg-light), var(--bt-expanded-row-bg-dark));
 
-    --bt-header-row-bg-light: var(--bt-row-bg-light, #fff);
-    --bt-header-row-bg-dark: var(--bt-row-bg-dark, #000000);
-    --bt-header-row-bg: light-dark(var(--bt-header-row-bg-light), var(--bt-header-row-bg-dark));
+        --bt-header-row-bg-light: var(--bt-row-bg-light, #fff);
+        --bt-header-row-bg-dark: var(--bt-row-bg-dark, #000000);
+        --bt-header-row-bg: light-dark(var(--bt-header-row-bg-light), var(--bt-header-row-bg-dark));
 
-    // Hover colors
-    // --bt-row-hover-bg-light: #E0EEFF;
-    // --bt-row-hover-bg-dark: #041529;
-    --bt-row-hover-bg: light-dark(var(--bt-row-hover-bg-light), var(--bt-row-hover-bg-dark));
+        // Hover colors
+        // --bt-row-hover-bg-light: #E0EEFF;
+        // --bt-row-hover-bg-dark: #041529;
+        --bt-row-hover-bg: light-dark(var(--bt-row-hover-bg-light), var(--bt-row-hover-bg-dark));
 
-    --bt-normal-row-hover-bg-light: var(--bt-row-hover-bg-light, #daebff);
-    --bt-normal-row-hover-bg-dark: var(--bt-row-hover-bg-dark, #0f1a27);
-    --bt-normal-row-hover-bg: light-dark(var(--bt-normal-row-hover-bg-light), var(--bt-normal-row-hover-bg-dark));
+        --bt-normal-row-hover-bg-light: var(--bt-row-hover-bg-light, #daebff);
+        --bt-normal-row-hover-bg-dark: var(--bt-row-hover-bg-dark, #0f1a27);
+        --bt-normal-row-hover-bg: light-dark(var(--bt-normal-row-hover-bg-light), var(--bt-normal-row-hover-bg-dark));
 
-    --bt-expanded-row-hover-bg-light: var(--bt-row-hover-bg-light, #daebff);
-    --bt-expanded-row-hover-bg-dark: var(--bt-row-hover-bg-dark, #0f1a27);
-    --bt-expanded-row-hover-bg: light-dark(var(--bt-expanded-row-hover-bg-light), var(--bt-expanded-row-hover-bg-dark));
+        --bt-expanded-row-hover-bg-light: var(--bt-row-hover-bg-light, #daebff);
+        --bt-expanded-row-hover-bg-dark: var(--bt-row-hover-bg-dark, #0f1a27);
+        --bt-expanded-row-hover-bg: light-dark(var(--bt-expanded-row-hover-bg-light), var(--bt-expanded-row-hover-bg-dark));
 
-    /** Row foreground color */
-    // NOTE: these two are the general color that will change the entire color 
-    // if granular control is required it is better to change the individual colors.
-    --bt-row-color-light: #000;
-    --bt-row-color-dark: #fff;
-    --bt-row-color: light-dark(var(--bt-row-color-light), var(--bt-row-color-dark));
+        /** Row foreground color */
+        // NOTE: these two are the general color that will change the entire color 
+        // if granular control is required it is better to change the individual colors.
+        --bt-row-color-light: #000;
+        --bt-row-color-dark: #fff;
+        --bt-row-color: light-dark(var(--bt-row-color-light), var(--bt-row-color-dark));
 
-    --bt-normal-row-color-light: var(--bt-row-color-light, #000);
-    --bt-normal-row-color-dark: var(--bt-row-color-dark, #fff);
-    --bt-normal-row-color: light-dark(var(--bt-normal-row-color-light), var(--bt-normal-row-color-dark));
+        --bt-normal-row-color-light: var(--bt-row-color-light, #000);
+        --bt-normal-row-color-dark: var(--bt-row-color-dark, #fff);
+        --bt-normal-row-color: light-dark(var(--bt-normal-row-color-light), var(--bt-normal-row-color-dark));
 
-    --bt-expanded-row-color-light: var(--bt-row-color-light, #000);
-    --bt-expanded-row-color-dark: var(--bt-row-color-dark, #fff);
-    --bt-expanded-row-color: light-dark(var(--bt-expanded-row-color-light), var(--bt-expanded-row-color-dark));
+        --bt-expanded-row-color-light: var(--bt-row-color-light, #000);
+        --bt-expanded-row-color-dark: var(--bt-row-color-dark, #fff);
+        --bt-expanded-row-color: light-dark(var(--bt-expanded-row-color-light), var(--bt-expanded-row-color-dark));
 
-    --bt-header-row-color-light: var(--bt-header-row-color-light, #000);
-    --bt-header-row-color-dark: var(--bt-header-row-color-dark, #fff);
-    --bt-header-row-color: light-dark(var(--bt-header-row-color-light), var(--bt-header-row-color-dark));
+        --bt-header-row-color-light: var(--bt-header-row-color-light, #000);
+        --bt-header-row-color-dark: var(--bt-header-row-color-dark, #fff);
+        --bt-header-row-color: light-dark(var(--bt-header-row-color-light), var(--bt-header-row-color-dark));
 
 
-    // NOTE: General icon color.
-    // Defining this icon color will set the icon and bg color for all icons in the table. 
-    // --bt-icon-color-light: #333;
-    // --bt-icon-color-dark: #fff;
-    // --bt-icon-bg-light: #e8e8e8;
-    // --bt-icon-bg-dark: #1b1b1b;
+        // NOTE: General icon color.
+        // Defining this icon color will set the icon and bg color for all icons in the table. 
+        // --bt-icon-color-light: #333;
+        // --bt-icon-color-dark: #fff;
+        // --bt-icon-bg-light: #e8e8e8;
+        // --bt-icon-bg-dark: #1b1b1b;
 
-    // Header customization icon color.
-    --bt-cust-icon-color-light: var(--bt-icon-color-light, #333);
-    --bt-cust-icon-color-dark: var(--bt-icon-color-dark, #fff);
-    --bt-cust-icon-color: light-dark(var(--bt-cust-icon-color-light), var(--bt-cust-icon-color-dark));
+        // Header customization icon color.
+        --bt-cust-icon-color-light: var(--bt-icon-color-light, #333);
+        --bt-cust-icon-color-dark: var(--bt-icon-color-dark, #fff);
+        --bt-cust-icon-color: light-dark(var(--bt-cust-icon-color-light), var(--bt-cust-icon-color-dark));
 
-    // Header customization icon bg.
-    --bt-cust-icon-bg-light: var(--bt-icon-bg-light, #e8e8e8);
-    --bt-cust-icon-bg-dark: var(--bt-icon-bg-dark, #1b1b1b);
-    --bt-cust-icon-bg: light-dark(var(--bt-cust-icon-bg-light), var(--bt-cust-icon-bg-dark));
+        // Header customization icon bg.
+        --bt-cust-icon-bg-light: var(--bt-icon-bg-light, #e8e8e8);
+        --bt-cust-icon-bg-dark: var(--bt-icon-bg-dark, #1b1b1b);
+        --bt-cust-icon-bg: light-dark(var(--bt-cust-icon-bg-light), var(--bt-cust-icon-bg-dark));
 
-    // row expansion icon bg.
-    --bt-row-expand-icon-bg-light: var(--bt-icon-bg-light, #cae2ff);
-    --bt-row-expand-icon-bg-dark: var(--bt-icon-bg-dark, #505a67);
-    --bt-row-expand-icon-bg: light-dark(var(--bt-row-expand-icon-bg-light), var(--bt-row-expand-icon-bg-dark));
+        // row expansion icon bg.
+        --bt-row-expand-icon-bg-light: var(--bt-icon-bg-light, #cae2ff);
+        --bt-row-expand-icon-bg-dark: var(--bt-icon-bg-dark, #505a67);
+        --bt-row-expand-icon-bg: light-dark(var(--bt-row-expand-icon-bg-light), var(--bt-row-expand-icon-bg-dark));
 
-    // row expansion icon color.
-    --bt-row-expand-icon-color-light: var(--bt-icon-color-light, #333);
-    --bt-row-expand-icon-color-dark: var(--bt-icon-color-dark, #fff);
-    --bt-row-expand-icon-color: light-dark(var(--bt-row-expand-icon-color-light), var(--bt-row-expand-icon-color-dark));
+        // row expansion icon color.
+        --bt-row-expand-icon-color-light: var(--bt-icon-color-light, #333);
+        --bt-row-expand-icon-color-dark: var(--bt-icon-color-dark, #fff);
+        --bt-row-expand-icon-color: light-dark(var(--bt-row-expand-icon-color-light), var(--bt-row-expand-icon-color-dark));
 
-    // button styles
-    --bt-button-bg-light: #e8e8e8;
-    --bt-button-bg-dark: #1b1b1b;
-    --bt-button-bg: light-dark(var(--bt-button-bg-light), var(--bt-button-bg-dark));
-    --bt-button-color-light: #333;
-    --bt-button-color-dark: #fff;
-    --bt-button-color: light-dark(var(--bt-button-color-light), var(--bt-button-color-dark));
+        // button styles
+        --bt-button-bg-light: #e8e8e8;
+        --bt-button-bg-dark: #1b1b1b;
+        --bt-button-bg: light-dark(var(--bt-button-bg-light), var(--bt-button-bg-dark));
+        --bt-button-color-light: #333;
+        --bt-button-color-dark: #fff;
+        --bt-button-color: light-dark(var(--bt-button-color-light), var(--bt-button-color-dark));
 
-    // hover normal button
-    --bt-button-hover-bg-light: #d8d8d8;
-    --bt-button-hover-bg-dark: #4e4e4e;
-    --bt-button-hover-bg: light-dark(var(--bt-button-hover-bg-light), var(--bt-button-hover-bg-dark));
+        // hover normal button
+        --bt-button-hover-bg-light: #d8d8d8;
+        --bt-button-hover-bg-dark: #4e4e4e;
+        --bt-button-hover-bg: light-dark(var(--bt-button-hover-bg-light), var(--bt-button-hover-bg-dark));
 
-    --bt-button-hover-color-light: #333;
-    --bt-button-hover-color-dark: #fff;
-    --bt-button-hover-color: light-dark(var(--bt-button-hover-color-light), var(--bt-button-hover-color-dark));
+        --bt-button-hover-color-light: #333;
+        --bt-button-hover-color-dark: #fff;
+        --bt-button-hover-color: light-dark(var(--bt-button-hover-color-light), var(--bt-button-hover-color-dark));
 
-    // disabled button 
-    --bt-button-disabled-bg-light: #f8f8f8;
-    --bt-button-disabled-bg-dark: #000000;
-    --bt-button-disabled-bg: light-dark(var(--bt-button-disabled-bg-light), var(--bt-button-disabled-bg-dark));
+        // disabled button 
+        --bt-button-disabled-bg-light: #f8f8f8;
+        --bt-button-disabled-bg-dark: #000000;
+        --bt-button-disabled-bg: light-dark(var(--bt-button-disabled-bg-light), var(--bt-button-disabled-bg-dark));
 
-    // active button 
-    --bt-button-active-color: #fff;
-    --bt-button-active-bg: #1B84FF;
-    --bt-button-active-hover-color: #fff;
-    --bt-button-active-hover-bg: #499DFF;
+        // active button 
+        --bt-button-active-color: #fff;
+        --bt-button-active-bg: #1B84FF;
+        --bt-button-active-hover-color: #fff;
+        --bt-button-active-hover-bg: #499DFF;
 
-    // scrollbar colors
-    --bt-scrollbar-bg-light: #c0c0c012;
-    --bt-scrollbar-bg-dark: #c0c0c012;
-    --bt-scrollbar-bg: light-dark(var(--bt-scrollbar-bg-light), var(--bt-scrollbar-bg-dark));
+        // scrollbar colors
+        --bt-scrollbar-bg-light: #c0c0c012;
+        --bt-scrollbar-bg-dark: #c0c0c012;
+        --bt-scrollbar-bg: light-dark(var(--bt-scrollbar-bg-light), var(--bt-scrollbar-bg-dark));
 
-    --bt-scrollbar-thumb-light: #c0c0c07a;
-    --bt-scrollbar-thumb-dark: #1b1b1b;
-    --bt-scrollbar-thumb: light-dark(var(--bt-scrollbar-thumb-light), var(--bt-scrollbar-thumb-dark));
+        --bt-scrollbar-thumb-light: #c0c0c07a;
+        --bt-scrollbar-thumb-dark: #1b1b1b;
+        --bt-scrollbar-thumb: light-dark(var(--bt-scrollbar-thumb-light), var(--bt-scrollbar-thumb-dark));
 
-    --bt-loader-bg-light: rgba(255, 255, 255, 0.7);
-    --bt-loader-bg-dark: rgba(0, 0, 0, 0.7);
-    --bt-loader-bg: light-dark(var(--bt-loader-bg-light), var(--bt-loader-bg-dark));
+        --bt-loader-bg-light: rgba(255, 255, 255, 0.7);
+        --bt-loader-bg-dark: rgba(0, 0, 0, 0.7);
+        --bt-loader-bg: light-dark(var(--bt-loader-bg-light), var(--bt-loader-bg-dark));
 
-    // acts as both hover and active
-    --bt-scrollbar-thumb-active-light: #c0c0c0FF;
-    --bt-scrollbar-thumb-active-dark: #4e4e4e;
-    --bt-scrollbar-thumb-active: light-dark(var(--bt-scrollbar-thumb-active-light), var(--bt-scrollbar-thumb-active-dark));
+        // acts as both hover and active
+        --bt-scrollbar-thumb-active-light: #c0c0c0FF;
+        --bt-scrollbar-thumb-active-dark: #4e4e4e;
+        --bt-scrollbar-thumb-active: light-dark(var(--bt-scrollbar-thumb-active-light), var(--bt-scrollbar-thumb-active-dark));
 
-    --loader-spin-ring-wide: 2px;
-    --loader-spin-ring-color-light: #e8e8e8;
-    --loader-spin-ring-color-dark: #1b1b1b;
-    --loader-spin-ring-color: light-dark(var(--loader-spin-ring-color-light), var(--loader-spin-ring-color-dark));
+        --loader-spin-ring-wide: 2px;
+        --loader-spin-ring-color-light: #e8e8e8;
+        --loader-spin-ring-color-dark: #1b1b1b;
+        --loader-spin-ring-color: light-dark(var(--loader-spin-ring-color-light), var(--loader-spin-ring-color-dark));
 
-    --loader-spin-ring-active-color: #1B84FF;
-    --loader-duration-normal: 1s;
+        --loader-spin-ring-active-color: #1B84FF;
+        --loader-duration-normal: 1s;
 
-    // Font sizes
-    --bt-font-size-normal: 14px;
-    --bt-font-size-lg: 16px;
-    --bt-font-size-sm: 12px;
+        // Font sizes
+        --bt-font-size-normal: 14px;
+        --bt-font-size-lg: 16px;
+        --bt-font-size-sm: 12px;
+    }
 }
 
 .bt {
+
 
     &-container {
         width: 100%;
