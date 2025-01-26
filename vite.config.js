@@ -61,7 +61,7 @@ export default defineConfig({
       },
     },
     postcss: {
-      plugins: [autoprefixer()]
+      plugins: [autoprefixer(), tailwindcss()]
     }
   },
   build: {
