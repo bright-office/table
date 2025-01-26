@@ -7,7 +7,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Bright Table',
   tagline: 'Table library for bright office systems by bright-office systems',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/bright-logo.png',
 
   // Set the production url of your site here
   url: 'https://your-docusaurus-site.example.com',
@@ -66,12 +66,12 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/bright-logo.png',
     navbar: {
       title: 'Bright Table',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/bright-logo.png',
       },
       items: [
         {
