@@ -81,7 +81,6 @@ export default function NormalTable() {
                 renderTableTopNav={() => {
                     return (
                         <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
-                            I am the nav
                         </div>
                     )
                 }}
@@ -97,7 +96,6 @@ export default function NormalTable() {
                         urlProp: "href"
                     }
                 }}
-                loading={true}
                 shouldUpdateScroll={true}
                 data={[]}
                 cellBordered
