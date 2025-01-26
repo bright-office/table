@@ -271,7 +271,6 @@ export const useRowSelection = () => {
         });
     }
 
-
     type getRowSelectedStatus = {
         variants: {
             isHeader: boolean,
@@ -339,10 +338,9 @@ export const useRowSelection = () => {
                     typeof parent !== "string" && parent.parentId === currentRowId
                 ) as { parentId: string, childIds: string[] }
 
-                if (isInversed)
-                {
+                if (isInversed) {
                     // if parent is not found then it should be selected.
-                    if(!parent)
+                    if (!parent)
                         return true;
 
                     // if all children are missing then it should be selected.
@@ -352,7 +350,7 @@ export const useRowSelection = () => {
 
                 //Normal condition
                 const areAllChildsInState = childrenIds.every((child) => {
-                    return parent?.childIds?.includes(child);   
+                    return parent?.childIds?.includes(child);
                 })
 
                 return areAllChildsInState;

@@ -37,7 +37,8 @@ const SelectionCheckbox = memo((selectionCheckboxProps: SelectionCheckboxProps) 
         onRowSelect,
         currentRowId,
         variant,
-        ...specificProps } = selectionCheckboxProps;
+        ...specificProps
+    } = selectionCheckboxProps;
 
     const {
         handleNormalSelection,
@@ -82,7 +83,6 @@ const SelectionCheckbox = memo((selectionCheckboxProps: SelectionCheckboxProps) 
         className: 'grid place-items-center group',
         onClick: handleRowSelection,
     };
-
 
     if (variants.isHeader)
         (cellProps as any).height = (specificProps as any)?.headerHeight;

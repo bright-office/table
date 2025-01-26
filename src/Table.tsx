@@ -978,6 +978,7 @@ const Table = React.forwardRef(
         const bindRowClick = useCallback(
             (rowData: Row) => {
                 return (event: React.MouseEvent) => {
+                    //PIN: call checkbox click
                     onRowClick?.(rowData, event);
                 };
             },

@@ -3,6 +3,7 @@ import { mergeRefs, useClassNames } from './utils';
 import TableContext from './TableContext';
 import { StandardProps } from './@types/common';
 import { ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
+import { useRowSelection } from './utils/useRowSelection';
 
 export interface RowProps extends StandardProps {
     width?: number;
@@ -48,6 +49,7 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
         "data-depth": depth = 0,
         stripeRows = false,
         stripeExtendedRows = false,
+        onClick: onRowSelect,
         ...rest
     } = props as RowProps & {
         "data-depth"?: number
@@ -79,8 +81,50 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
 
     translateDOMPositionXY?.(styles as CSSStyleDeclaration, 0, top);
 
+    const variants = {
+        isHeader: isHeaderRow || false,
+        isNormal: false,
+        isTree: true,
+    };
+
+    const {
+        handleNormalSelection,
+        getRowSelectedStatus,
+        handleTreeRowSelection,
+        handleHeaderSelection,
+    } = useRowSelection();
+
+    {/* let isChecked = getRowSelectedStatus({
+        variants,
+    }); */}
+
+    const handleRowSelection = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (variants.isHeader) {
+            handleHeaderSelection({ onRowSelect: onRowSelect })
+            return;
+        }
+
+        if (variants.isTree) {
+            handleTreeRowSelection({
+                onRowSelect: onRowSelect,
+                treeProps: specificProps as TreeTableCheckbox,
+                currentRowId: currentRowId as string,
+            })
+            return;
+        }
+
+        handleNormalSelection({
+            currentRowId: currentRowId as string,
+            onRowSelect
+        })
+    };
+
     return (
         <div
+            onClick={}
             role="row"
             {...rest}
             ref={mergeRefs(rowRef, ref)}
