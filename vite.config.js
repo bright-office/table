@@ -2,7 +2,6 @@ import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { readFile, writeFile } from 'fs';
-import tailwindcss from "tailwindcss";
 
 const prependUseClient = () => {
   return {

@@ -537,7 +537,7 @@ const Table = React.forwardRef(
             showHeader,
             onTableScroll: debounce((coords: { x?: number; y?: number }) => onScrollTo(coords), 100),
             onTableResizeChange: handleTableResizeChange,
-            hasPagination: (props.pagination && (props.pagination.serverResponse?.links.length || 0) > 3),
+            hasPagination: (props.pagination && (props.pagination?.serverResponse?.links?.length || 0) > 3),
             hasRowSelection: rowSelection
         });
 
@@ -711,7 +711,7 @@ const Table = React.forwardRef(
                 let tableTopNavHeight = 0;
                 let paginationHeight = 0;
 
-                if (pagination && (pagination.serverResponse?.links.length || 0 > 3)) {
+                if (pagination && (pagination.serverResponse?.links?.length || 0 > 3)) {
                     paginationHeight = paginationRef.current?.getBoundingClientRect().height || 0;
                     tableHeightWithoutPagination -= paginationHeight;
                 }

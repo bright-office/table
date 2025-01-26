@@ -3,8 +3,16 @@
 @import "./cell.less";
 @import "./row.less";
 
+.bright {
+    @import './functions.less';
+    @import './loader.less';
+    @import './table.less';
+    @import './treetable.less';
+    @import './scrollbar.less';
+    @import './column-group.less';
+}
+
 :root {
-    color-scheme: light dark;
     --prefix: bright-;
 
     --bt-base-bg-light: #fff;
@@ -161,16 +169,8 @@
     --bt-font-size-sm: 12px;
 }
 
-.bright {
-    @import './functions.less';
-    @import './loader.less';
-    @import './table.less';
-    @import './treetable.less';
-    @import './scrollbar.less';
-    @import './column-group.less';
-}
-
 .bt {
+
     &-container {
         width: 100%;
         display: flex;
