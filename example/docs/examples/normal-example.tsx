@@ -1,19 +1,7 @@
-import { Cell, Column, ColumnGroup, HeaderCell, Table } from "bright-table"
-import { data, mockNestedData, } from "./faker";
-import { useEffect, useState } from "react";
-import { larvelPaginationObject } from "bright-table/types/src/Pagination.d.ts";
-import StyleGuide from "./styleGuide";
+import { Table, HeaderCell, Column, ColumnGroup, Cell } from "bright-table";
+import { larvelPaginationObject } from "bright-table/types/src/Pagination.js";
 
-function App() {
-    const [data, setData] = useState<data[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [pin, setPin] = useState(false);
-
-    useEffect(() => {
-        const data = mockNestedData(101);
-        setData(data);
-        setLoading(false);
-    }, []);
+export default function NormalTable() {
 
     const serverResponse: larvelPaginationObject = {
         "first_page_url": "https://localschool.test/app/messages?page=1",
@@ -93,7 +81,6 @@ function App() {
                 renderTableTopNav={() => {
                     return (
                         <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
-                            I am the nav
                         </div>
                     )
                 }}
@@ -110,9 +97,7 @@ function App() {
                     }
                 }}
                 shouldUpdateScroll={true}
-                stripeExtendedRows
-                stripeRows
-                data={data}
+                data={[]}
                 cellBordered
                 height={innerHeight - 200}
                 onRowClick={rowData => {
@@ -125,7 +110,7 @@ function App() {
                 </Column>
 
                 <ColumnGroup header="User Name">
-                    <Column width={250} fixed={pin ? "right" : false} >
+                    <Column width={250}>
                         <HeaderCell>First Name</HeaderCell>
                         <Cell dataKey="firstname" />
                     </Column>
@@ -154,10 +139,6 @@ function App() {
                 </Column>
 
             </Table>
-
-            <StyleGuide />
         </div >
     )
 }
-
-export default App

@@ -405,8 +405,12 @@ const Table = React.forwardRef(
             onRowSelect,
             renderTableTopNav,
             onHeaderCustomizeClick,
+            stripeRows,
+            stripeExtendedRows,
             ...rest
         } = props;
+
+        console.log({ stripeRows })
 
         const children = useMemo(
             () => flattenChildren(isFunction(getChildren) ? getChildren(getChildrenProps) : getChildren),
@@ -909,7 +913,13 @@ const Table = React.forwardRef(
             }
 
             return (
-                <Row {...restRowProps} data-depth={depth} style={rowStyles}>
+                <Row
+                    {...restRowProps}
+                    data-depth={depth}
+                    style={rowStyles}
+                    stripeRows={stripeRows}
+                    stripeExtendedRows={stripeExtendedRows}
+                >
                     {renderRowProp ? renderRowProp(rowNode, rowData) : rowNode}
                 </Row>
             );

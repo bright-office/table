@@ -4,8 +4,8 @@
     "description": "A React table library for bright office system.",
     "license": "MIT",
     "author": {
-        "name":"Saroj Regmi",
-        "url":"https://sarojregmi200.com.np"
+        "name": "Saroj Regmi",
+        "url": "https://sarojregmi200.com.np"
     },
     "keywords": [
         "table",
@@ -35,11 +35,16 @@
     },
     "typesVersions": {
         "*": {
-            "*": ["./types/*"]
+            "*": [
+                "./types/*"
+            ]
         }
     },
     "types": "./types/src/index.d.ts",
-    "files": ["dist/", "types/"],
+    "files": [
+        "dist/",
+        "types/"
+    ],
     "scripts": {
         "link:package": "bun link && cd docs && bun link bright-table",
         "unlink:package": "bun unlink && cd docs && bun unlink bright-table",
@@ -59,13 +64,11 @@
         "lodash": "^4.17.21",
         "react-is": "^17.0.2"
     },
-
     "peerDependencies": {
         "prop-types": "^15.7.2",
         "react": "^16.8.0 || ^17 || ^18 || ^19",
         "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
     },
-
     "devDependencies": {
         "@commitlint/cli": "^13.1.0",
         "@commitlint/config-conventional": "^13.1.0",
