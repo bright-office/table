@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Tutorial
 
 Let's discover **Bright Table in less than 10 minutes**.
 
