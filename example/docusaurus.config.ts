@@ -6,8 +6,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Bright Table',
-  tagline: 'Table creation package from Bright software',
-  favicon: 'img/favicon.ico',
+  tagline: 'Table library for bright office systems by bright-office systems',
+  favicon: 'img/bright-logo.png',
 
   // Set the production url of your site here
   url: 'https://your-docusaurus-site.example.com',
@@ -66,12 +66,12 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/bright-logo.png',
     navbar: {
       title: 'Bright Table',
       logo: {
         alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        src: 'img/bright-logo.png',
       },
       items: [
         {
@@ -80,12 +80,7 @@ const config: Config = {
           position: 'left',
           label: 'Tutorial',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
-        {
-          href: 'https://github.com/bright-office/bright-table',
-          label: 'GitHub',
-          position: 'right',
-        },
+       
       ],
     },
     footer: {
@@ -100,30 +95,11 @@ const config: Config = {
             },
           ],
         },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
+     
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
+        
             {
               label: 'GitHub',
               href: 'https://github.com/bright-office/bright-table',
@@ -131,7 +107,6 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Bright Table, Inc. Built with React.`,
     },
     prism: {
       theme: prismThemes.github,
