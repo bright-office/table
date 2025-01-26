@@ -1,18 +1,18 @@
-@import "./pagination.less";
-@import "./header.less";
-@import "./cell.less";
-@import "./row.less";
-
-.bright {
-    @import './functions.less';
-    @import './loader.less';
-    @import './table.less';
-    @import './treetable.less';
-    @import './scrollbar.less';
-    @import './column-group.less';
-}
-
 @layer bt {
+    @import "./pagination.less";
+    @import "./header.less";
+    @import "./cell.less";
+    @import "./row.less";
+
+    .bright {
+        @import './functions.less';
+        @import './loader.less';
+        @import './table.less';
+        @import './treetable.less';
+        @import './scrollbar.less';
+        @import './column-group.less';
+    }
+
     :root {
         --prefix: bright-;
 
@@ -169,44 +169,44 @@
         --bt-font-size-lg: 16px;
         --bt-font-size-sm: 12px;
     }
-}
 
-.bt {
+    .bt {
 
 
-    &-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        justify-content: center;
-    }
+        &-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+        }
 
-    &-wrapper {
-        width: 100%;
-        overflow: hidden;
-        border-radius: 8px;
-        background: var(--bt-base-bg);
-        border: 1px solid var(--bt-border-color);
-    }
+        &-wrapper {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--bt-base-bg);
+            border: 1px solid var(--bt-border-color);
+        }
 
-    &-direction-aware-con {
-        border: 1px solid var(--bt-border-color);
-        border-radius: 4px;
-        padding: 4px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 500;
-        opacity: 0;
-        transform: translateX(50vw) translateY(50vh);
-        pointer-events: none;
-        display: none;
-    }
+        &-direction-aware-con {
+            border: 1px solid var(--bt-border-color);
+            border-radius: 4px;
+            padding: 4px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 500;
+            opacity: 0;
+            transform: translateX(50vw) translateY(50vh);
+            pointer-events: none;
+            display: none;
+        }
 
-    &-direction-aware-con-active {
-        opacity: 1;
-        display: block;
-        pointer-events: all;
+        &-direction-aware-con-active {
+            opacity: 1;
+            display: block;
+            pointer-events: all;
+        }
     }
 }
