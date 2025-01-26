@@ -1,0 +1,55 @@
+.bt-row {
+    &-header {
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-header-row-bg);
+            color: var(--bt-header-row-color);
+        }
+    }
+
+    &-normal {
+        color: var(--bt-normal-row-color);
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-normal-row-bg);
+        }
+
+        &:hover {
+
+            .bright-table-cell,
+            .bright-table-cell-group {
+                background: var(--bt-normal-row-hover-bg);
+            }
+        }
+    }
+
+    &:not(&-header):hover .bt-checkbox-unchecked {
+        background: var(--bt-checkbox-hover-bg);
+    }
+
+    &-expanded {
+        & .bt-checkbox-unchecked {
+            background: var(--bt-checkbox-hover-bg);
+        }
+
+        &:not(&-header):hover .bt-checkbox-unchecked {
+            background: var(--bt-checkbox-hover-bg);
+        }
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-expanded-row-bg);
+            color: var(--bt-expanded-row-color);
+        }
+
+        &:hover {
+
+            .bright-table-cell,
+            .bright-table-cell-group {
+                background: var(--bt-expanded-row-hover-bg);
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+&-table {
+    &-scrollbar {
+        background: var(--bt-scrollbar-bg);
+        position: absolute;
+
+        &-active {
+            background: var(--bt-scrollbar-bg);
+        }
+
+        &-hide {
+            display: none;
+        }
+
+        &-handle {
+            position: absolute;
+            background: var(--bt-scrollbar-thumb);
+            border-radius: 4px;
+        }
+
+        &-horizontal {
+            width: 100%;
+            height: 10px;
+            bottom: 2px;
+
+            &.fixed {
+                position: fixed;
+            }
+        }
+
+        &-horizontal &-handle {
+            height: 8px;
+            left: 0px;
+            top: 1px;
+        }
+
+        &-horizontal &-pressed,
+        &-horizontal:hover {
+            height: 14px;
+        }
+
+        &-horizontal &-pressed &-handle,
+        &-horizontal:hover &-handle {
+            top: 2px;
+            height: 10px;
+            background: var(--bt-scrollbar-thumb-active);
+        }
+
+        &-vertical {
+            top: 0;
+            right: 0px;
+            width: 10px;
+            bottom: 2px;
+        }
+
+        &-vertical &-handle {
+            min-height: 20px;
+            width: 8px;
+            top: 0px;
+            left: 1px;
+        }
+
+        &-vertical &-pressed,
+        &-vertical:hover {
+            width: 14px;
+        }
+
+        &-vertical &-pressed &-handle,
+        &-vertical:hover &-handle {
+            left: 2px;
+            width: 10px;
+            background: var(--bt-scrollbar-thumb-active);
+        }
+    }
+}

@@ -1,0 +1,90 @@
+{
+    "name": "bright-table",
+    "version": "0.0.6-alpha.2",
+    "description": "A React table library for bright office system.",
+    "license": "MIT",
+    "author": {
+        "name":"Saroj Regmi",
+        "url":"https://sarojregmi200.com.np"
+    },
+    "keywords": [
+        "table",
+        "react-table",
+        "bright",
+        "typescript",
+        "javascript"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sarojregmi200/bright-table.git"
+    },
+    "funding": {
+        "type": "individual",
+        "url": "https://buymeacoffee.com/sarojregmi200"
+    },
+    "type": "module",
+    "main": "./dist/src/index.js",
+    "exports": {
+        ".": {
+            "import": "./dist/src/index.js",
+            "types": "./types/src/index.d.ts"
+        },
+        "./types/*": {
+            "import": "./types/*"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "*": ["./types/*"]
+        }
+    },
+    "types": "./types/src/index.d.ts",
+    "files": ["dist/", "types/"],
+    "scripts": {
+        "link:package": "bun link && cd docs && bun link bright-table",
+        "unlink:package": "bun unlink && cd docs && bun unlink bright-table",
+        "dev:docs": "cd docs && bun run dev",
+        "dev:lib": "vite build --watch",
+        "dev:types": "npx tsc --watch --emitDeclarationOnly",
+        "dev": "concurrently \"bun run dev:lib\" \"bun run dev:types\"  \"bun run link:package && bun run dev:docs\" -c \"blue,green,yellow\" -n \"lib,types,docs\"",
+        "build": "vite build && bun run build:types",
+        "build:lib": "vite build",
+        "build:types": "npx tsc --emitDeclarationOnly",
+        "build:docs": "cd docs && bun run build"
+    },
+    "dependencies": {
+        "@juggle/resize-observer": "^3.3.1",
+        "classnames": "^2.3.1",
+        "dom-lib": "^3.3.1",
+        "lodash": "^4.17.21",
+        "react-is": "^17.0.2"
+    },
+
+    "peerDependencies": {
+        "prop-types": "^15.7.2",
+        "react": "^16.8.0 || ^17 || ^18 || ^19",
+        "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
+    },
+
+    "devDependencies": {
+        "@commitlint/cli": "^13.1.0",
+        "@commitlint/config-conventional": "^13.1.0",
+        "@faker-js/faker": "^7.6.0",
+        "@types/fs-extra": "^11.0.4",
+        "@types/lodash": "^4.14.165",
+        "@types/prop-types": "^15.7.1",
+        "@types/react": "^18.0.17",
+        "@types/react-dom": "^18.0.6",
+        "@types/react-is": "^18.2.4",
+        "autoprefixer": "^10.4.20",
+        "clsx": "^2.1.1",
+        "concurrently": "^9.1.0",
+        "less": "^4.1.3",
+        "prettier": "^2.3.2",
+        "prop-types": "^15.8.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "typescript": "^5.2.2",
+        "vite": "^5.4.9"
+    }
+}

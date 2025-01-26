@@ -1,0 +1,47 @@
+.set-side-length(@side) {
+    width: @side;
+    height: @side;
+
+    &::before,
+    &::after {
+        width: @side;
+        height: @side;
+    }
+}
+
+
+.loader-spin() {
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        display: block;
+        border-radius: 50%;
+    }
+
+    &::before {
+        border: var(--loader-spin-ring-wide) solid var(--loader-spin-ring-color);
+    }
+
+    &::after {
+        border-width: var(--loader-spin-ring-wide);
+        border-style: solid;
+        border-color: var(--loader-spin-ring-active-color) transparent transparent;
+        animation: loaderSpin var(--loader-duration-normal) infinite linear;
+    }
+}
+
+//** Loader
+//========================
+@keyframes loaderSpin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

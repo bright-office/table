@@ -1,0 +1,40 @@
+.bt-cell {
+    &-expand-icon {
+        transition: transform 250ms;
+        height: 8px;
+        width: 8px;
+
+        &-expanded {
+            transform: rotate(0deg);
+        }
+
+        &-collapsed {
+            transform: rotate(-90deg);
+        }
+    }
+
+    &-expansion-con {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20px;
+        width: 20px;
+        padding: 4px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-right: 4px;
+
+        &:hover {
+            background: var(--bt-row-expand-icon-bg);
+        }
+    }
+}
+
+.bt-checkbox-unchecked {
+    background-color: var(--bt-checkbox-bg);
+    border: 1px solid var(--bt-border-color);
+
+    &:hover {
+        background-color: var(--bt-checkbox-hover-bg);
+    }
+}
