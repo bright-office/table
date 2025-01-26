@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Bright Table',
-  tagline: 'Table creation package from Bright software',
+  tagline: 'Table library for bright office systems by bright-office systems',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -100,30 +100,11 @@ const config: Config = {
             },
           ],
         },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
+     
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
+        
             {
               label: 'GitHub',
               href: 'https://github.com/bright-office/bright-table',
@@ -131,7 +112,6 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Bright Table, Inc. Built with React.`,
     },
     prism: {
       theme: prismThemes.github,
