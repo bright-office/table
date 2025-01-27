@@ -4,6 +4,7 @@ import TableContext from './TableContext';
 import { StandardProps } from './@types/common';
 import { ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { useRowSelection } from './utils/useRowSelection';
+import { TreeTableCheckbox } from './components/SelectionCheckbox';
 
 export interface RowProps extends StandardProps {
     width?: number;
@@ -59,6 +60,15 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
     const { withClassPrefix, merge } = useClassNames(classPrefix);
     const isExpanded = depth > 0;
 
+    const {
+        handleNormalSelection,
+        getRowSelectedStatus,
+        handleTreeRowSelection,
+        handleHeaderSelection,
+    } = useRowSelection();
+
+    let isChecked = true;
+
     const classes = merge(className,
         withClassPrefix({ header: isHeaderRow, rowspan: rowSpan }),
         "bt-row",
@@ -68,9 +78,14 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
                 ? "bt-row-expanded"
                 : "bt-row-normal",
 
+        // NOTE: This can be refactored and made a little cleaner and predicatable.
         // Stripe rows
-        (!isHeaderRow && stripeRows && !isExpanded) ? "bt-row-normal-striped" : "",
-        (stripeExtendedRows && !isHeaderRow && isExpanded) ? "bt-row-expanded-striped" : "",
+        !isHeaderRow && (stripeRows && !isExpanded) ? "bt-row-normal-striped" : "",
+        !isHeaderRow && (stripeExtendedRows && isExpanded) ? "bt-row-expanded-striped" : "",
+
+        // selected classes
+        !isHeaderRow && isChecked && isExpanded ? "bt-row-expanded-selected" : "",
+        !isHeaderRow && isChecked && !isExpanded ? "bt-row-normal-selected" : "",
     );
 
     const styles = {
@@ -86,17 +101,6 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
         isNormal: false,
         isTree: true,
     };
-
-    const {
-        handleNormalSelection,
-        getRowSelectedStatus,
-        handleTreeRowSelection,
-        handleHeaderSelection,
-    } = useRowSelection();
-
-    {/* let isChecked = getRowSelectedStatus({
-        variants,
-    }); */}
 
     const handleRowSelection = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
