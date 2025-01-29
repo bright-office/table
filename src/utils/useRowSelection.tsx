@@ -1,10 +1,12 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { SelectionCheckboxProps, TreeTableCheckbox } from "../components/SelectionCheckbox"
 
+export type rowId = (string | number)
+
 type selectedRows = ({
-    parentId: string,
-    childIds: string[]
-} | string)[]
+    parentId: rowId,
+    childIds: rowId[]
+} | rowId)[]
 export type rowSelectionState = {
     selectedRows: selectedRows
     allSelected: boolean,
@@ -86,15 +88,15 @@ export const useRowSelection = () => {
             if (typeof id !== "object")
                 return id === queryId
 
-            return id?.[0]?.some((child) => {
+            return id?.[0]?.some((child: any) => {
                 return child === queryId
             })
         })
     }
 
     type handleTreeRowSelection = {
-        treeProps: TreeTableCheckbox;
-        currentRowId: string;
+        treeProps: Partial<Pick<TreeTableCheckbox, "parentId" | "childrenIds">>;
+        currentRowId: rowId;
         onRowSelect?: (selectionState: rowSelectionState) => void;
     }
 
@@ -112,9 +114,9 @@ export const useRowSelection = () => {
             if (isChild) {
                 let updatedState = prevRowSelection
                 const parent = prevRowSelection.selectedRows
-                    .find(data => typeof data === "string"
+                    .find(data => (typeof data === "string" || typeof data === "number")
                         ? false
-                        : data.parentId === parentId) as { parentId: string, childIds: string[] } | undefined
+                        : data.parentId === parentId) as { parentId: string | number, childIds: string[] } | undefined
 
                 if (!parent) {
                     updatedState = {
@@ -175,7 +177,7 @@ export const useRowSelection = () => {
 
             if (isParent) {
                 const stateParent = prevRowSelection.selectedRows.find((obj) => {
-                    const isValidParent = typeof obj !== "string";
+                    const isValidParent = typeof obj === "object";
                     if (!isValidParent)
                         return false;
 
@@ -205,7 +207,7 @@ export const useRowSelection = () => {
                         ...prevRowSelection,
                         selectedRows: [
                             ...prevRowSelection.selectedRows.map(ids => {
-                                const nonObj = typeof ids === "string"
+                                const nonObj = typeof ids !== "object"
                                 if (nonObj)
                                     return ids;
 
@@ -318,7 +320,7 @@ export const useRowSelection = () => {
 
             if (isChild) {
                 const parent = rowSelection.selectedRows.find((parent) =>
-                    typeof parent !== "string" && parent.parentId === parentId
+                    typeof parent === "object" && parent.parentId === parentId
                 ) as { parentId: string, childIds: string[] }
 
                 if (!parent)
@@ -335,7 +337,7 @@ export const useRowSelection = () => {
 
             if (isParent) {
                 const parent = rowSelection.selectedRows.find((parent) =>
-                    typeof parent !== "string" && parent.parentId === currentRowId
+                    typeof parent === "object" && parent.parentId === currentRowId
                 ) as { parentId: string, childIds: string[] }
 
                 if (isInversed) {

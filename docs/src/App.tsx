@@ -6,13 +6,10 @@ import StyleGuide from "./styleGuide";
 
 function App() {
     const [data, setData] = useState<data[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [pin, setPin] = useState(false);
 
     useEffect(() => {
         const data = mockNestedData(101);
         setData(data);
-        setLoading(false);
     }, []);
 
     const serverResponse: larvelPaginationObject = {
@@ -118,14 +115,17 @@ function App() {
                 onRowClick={rowData => {
                     console.log(rowData);
                 }}
+                onRowSelect={(selectionState) => {
+                    console.log(selectionState)
+                }}
             >
-                <Column width={100} align="center" fixed={"left"} >
-                    <HeaderCell customizable>Id</HeaderCell>
+                <Column minWidth={200} >
+                    <HeaderCell customizable>sn</HeaderCell>
                     <Cell dataKey="id" />
                 </Column>
 
                 <ColumnGroup header="User Name">
-                    <Column width={250} fixed={pin ? "right" : false} >
+                    <Column width={250}>
                         <HeaderCell>First Name</HeaderCell>
                         <Cell dataKey="firstname" />
                     </Column>
@@ -137,7 +137,7 @@ function App() {
 
                 </ColumnGroup>
 
-                <Column width={300} flexGrow={1}>
+                <Column width={300} flexGrow={1} align="left">
                     <HeaderCell>Email</HeaderCell>
                     <Cell dataKey="email" />
                 </Column>

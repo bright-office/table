@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 export type data = {
-    id: number;
+    id: string | number;
     firstname: string;
     lastname: string
     gender: string;
@@ -11,7 +11,7 @@ export type data = {
 }
 
 export type nestedData = {
-    id: number;
+    id: string | number;
     firstname: string;
     lastname: string
     gender: string;
@@ -45,15 +45,15 @@ export const mockNestedData = (count: number): nestedData[] => {
     for (let i = 1; i <= count; i++) {
         const nesting = range[0] + Math.floor((Math.random() * (range[1] - range[0] + 1)))
         nestedData.push({
-            id: i,
+            id: faker.string.nanoid({ min: 4, max: 5 }),
             firstname: faker.person.firstName(),
             lastname: faker.person.lastName(),
             gender: faker.person.gender(),
             age: faker.number.int({ max: 100 }),
             postcode: faker.location.zipCode(),
             email: faker.internet.email(),
-            children: Array(nesting).fill("*").map((_, index) => ({
-                id: 65 + i + index,
+            children: Array(nesting).fill("*").map(() => ({
+                id: faker.string.nanoid({ min: 4, max: 5 }),
                 firstname: faker.person.firstName(),
                 lastname: faker.person.lastName(),
                 gender: faker.person.gender(),

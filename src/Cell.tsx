@@ -112,6 +112,7 @@ const Cell = React.forwardRef(
 
         const handleTreeToggle = useCallback(
             (event: React.MouseEvent) => {
+                event.stopPropagation();
                 onTreeToggle?.(rowKey, rowIndex, rowData, event);
             },
             [onTreeToggle, rowData, rowIndex, rowKey]
@@ -245,19 +246,7 @@ const Cell = React.forwardRef(
                     isTreeCol && hasChildren && handleTreeToggle?.(e);
                 }}
                 className={classes}
-
-                //TODO: tailwind remove
-                /* className={{
-                    [classes]: true,
-                    [headerColors]: isHeaderCell,
-                    [oddRowColors]: !isHeaderCell && (!isEven),
-                    [evenRowColors]: !isHeaderCell && (isEven),
-                    [treeColColors]: isTreeCol && hasChildren,
-                }
-                } */
                 style={styles}>
-
-                {/* // TODO: tailwind remove */}
                 <div className={prefix('content')} style={contentStyles}>
                     {content}
                 </div>

@@ -25,9 +25,9 @@ export type TreeTableCheckbox = {
     variant: 'tree';
     isTree: true;
     siblingsIds: string[];
-    parentId: string;
+    parentId?: string;
     childrenIds: string[];
-    currentRowId: string;
+    currentRowId: string | number;
 } & BaseCheckboxProps
 
 export type SelectionCheckboxProps = HeaderCheckbox | NormalRowCheckbox | TreeTableCheckbox;

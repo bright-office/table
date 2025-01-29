@@ -3,8 +3,7 @@ import { mergeRefs, useClassNames } from './utils';
 import TableContext from './TableContext';
 import { StandardProps } from './@types/common';
 import { ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
-import { useRowSelection } from './utils/useRowSelection';
-import { TreeTableCheckbox } from './components/SelectionCheckbox';
+import { rowSelectionState, useRowSelection } from './utils/useRowSelection';
 
 export interface RowProps extends StandardProps {
     width?: number;
@@ -32,6 +31,32 @@ export interface RowProps extends StandardProps {
      *  ```
      */
     stripeExtendedRows?: boolean;
+
+    /**
+    * Unique id of the row
+    */
+    rowId?: number | string;
+
+    /**
+     * Row selection callback function
+     */
+    onRowSelect?: ((state: rowSelectionState) => void);
+
+    /**
+     * Specify whether the table is a tree table or not
+    */
+    isTreeTable?: boolean;
+
+    /**
+     * Raw Row data of the current row, that is not a collection of cells.
+     */
+    rowData?: Record<any, any>;
+
+    /**
+     * Flag to know if row selection is active or not
+    */
+    rowSelection?: boolean;
+
 }
 
 const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) => {
@@ -50,11 +75,33 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
         "data-depth": depth = 0,
         stripeRows = false,
         stripeExtendedRows = false,
-        onClick: onRowSelect,
+        onRowSelect,
+        rowId,
+        isTreeTable = false,
+        rowSelection = false,
+        rowData = {},
         ...rest
     } = props as RowProps & {
         "data-depth"?: number
     };
+
+    const childrenIds = rowData?.children?.map((child: any) => child?.id) || [];
+    const treeChildInfo = {
+        parentId: undefined,
+        siblingsIds: [],
+    }
+
+    // first symbol is the parent symbol
+    const symbols = Object.getOwnPropertySymbols(rowData);
+
+    // tree child
+    // @ts-ignore
+    const rowParent = rowData[symbols[0]]
+    if (rowParent) {
+        treeChildInfo.parentId = rowParent?.id;
+        treeChildInfo.siblingsIds = rowParent?.children?.filter((children: any) => children?.id !== rowData?.id)
+            .map((siblings: any) => siblings?.id)
+    }
 
     const { translateDOMPositionXY } = useContext(TableContext);
     const { withClassPrefix, merge } = useClassNames(classPrefix);
@@ -62,9 +109,7 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
 
     const {
         handleNormalSelection,
-        getRowSelectedStatus,
         handleTreeRowSelection,
-        handleHeaderSelection,
     } = useRowSelection();
 
     let isChecked = true;
@@ -96,41 +141,38 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
 
     translateDOMPositionXY?.(styles as CSSStyleDeclaration, 0, top);
 
-    const variants = {
-        isHeader: isHeaderRow || false,
-        isNormal: false,
-        isTree: true,
-    };
-
     const handleRowSelection = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         e.stopPropagation();
+        rest.onClick?.(e);
 
-        if (variants.isHeader) {
-            handleHeaderSelection({ onRowSelect: onRowSelect })
+        if (!rowSelection || isHeaderRow || !rowId)
             return;
-        }
 
-        if (variants.isTree) {
+        if (isTreeTable) {
             handleTreeRowSelection({
                 onRowSelect: onRowSelect,
-                treeProps: specificProps as TreeTableCheckbox,
-                currentRowId: currentRowId as string,
+                currentRowId: rowId,
+
+                treeProps: {
+                    parentId: treeChildInfo.parentId,
+                    childrenIds: childrenIds,
+                },
             })
             return;
         }
 
         handleNormalSelection({
-            currentRowId: currentRowId as string,
+            currentRowId: rowId as string,
             onRowSelect
         })
     };
 
     return (
         <div
-            onClick={}
             role="row"
             {...rest}
+            onClick={handleRowSelection}
             ref={mergeRefs(rowRef, ref)}
             className={classes}
             style={styles}>

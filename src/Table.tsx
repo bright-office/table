@@ -40,7 +40,6 @@ import {
     useTableData,
     isSupportTouchEvent
 } from './utils';
-
 import type {
     StandardProps,
     SortType,
@@ -276,9 +275,10 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
 
     /**
      * Callback function when a row gets selected
+     * It is a basically a row click with selection state, when row selection
+     * is activated.
      */
     onRowSelect?: (state: rowSelectionState) => void
-
 
     /**
      * Add something at the top of table.Like a navigaiton
@@ -409,8 +409,6 @@ const Table = React.forwardRef(
             stripeExtendedRows,
             ...rest
         } = props;
-
-        console.log({ stripeRows })
 
         const children = useMemo(
             () => flattenChildren(isFunction(getChildren) ? getChildren(getChildrenProps) : getChildren),
@@ -765,14 +763,14 @@ const Table = React.forwardRef(
             props: TableRowProps,
             cells: any[],
             shouldRenderExpandedRow?: boolean,
-            rowData?: any
+            rowData?: Record<any, any>,
         ) => {
             const { depth, rowIndex, ...restRowProps } = props;
 
+            const rowId = rowData?.id;
+
             if (props.isHeaderRow) {
-
                 cells = cells.map((cell) => {
-
                     const isCustomizable = cell?.props?.customizable;
                     const hasOnHeaderCustomizeClick = cell?.props?.onHeaderCustomizeClick;
 
@@ -907,18 +905,25 @@ const Table = React.forwardRef(
                                 shouldRenderCheckbox: rowSelection
                             })}
                         </CellGroup>
+
                         {shouldRenderExpandedRow && renderRowExpanded(rowData)}
                     </>
                 );
             }
 
+
             return (
                 <Row
+                    rowId={rowId}
                     {...restRowProps}
                     data-depth={depth}
                     style={rowStyles}
                     stripeRows={stripeRows}
                     stripeExtendedRows={stripeExtendedRows}
+                    onRowSelect={onRowSelect}
+                    rowSelection={rowSelection}
+                    isTreeTable={isTree}
+                    rowData={rowData}
                 >
                     {renderRowProp ? renderRowProp(rowNode, rowData) : rowNode}
                 </Row>
