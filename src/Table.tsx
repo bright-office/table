@@ -911,7 +911,6 @@ const Table = React.forwardRef(
                 );
             }
 
-
             return (
                 <Row
                     rowId={rowId}
