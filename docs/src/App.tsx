@@ -107,7 +107,6 @@ function App() {
                     }
                 }}
                 shouldUpdateScroll={true}
-                stripeExtendedRows
                 stripeRows
                 data={data}
                 cellBordered
