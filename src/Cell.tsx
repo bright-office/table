@@ -145,8 +145,6 @@ const Cell = React.forwardRef(
             ...style,
             width: fullText ? width - 1 : width,
             height: nextHeight,
-            display: 'flex',
-            alignItems: 'center',
             [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding
         };
 
@@ -211,11 +209,16 @@ const Cell = React.forwardRef(
                 );
             }
 
-            return <span style={{
-                width: 24,
-            }}>
-            </span>;
+            if (isTreeCol)
+                return <span style={{
+                    width: 24,
+                }}>
+                </span>;
+
+            return null;
         };
+
+        const isExpandableColumn = hasChildren && isTreeCol;
 
         const content = wordWrap ? (
             <div className={prefix('wrap')}>
@@ -242,7 +245,7 @@ const Cell = React.forwardRef(
                 }}
                 className={classes}
                 style={styles}>
-                <div className={prefix('content')} style={contentStyles}>
+                <div className={prefix('content') + (isExpandableColumn ? ' bt-cell-expandable' : '')} style={contentStyles}>
                     {content}
                 </div>
             </div>

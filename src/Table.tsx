@@ -55,6 +55,7 @@ import "./less/index.less";
 import Pagination from './Pagination';
 import { paginationProps } from './Pagination';
 import { rowSelectionState, RowSelectionWrapper } from './utils/useRowSelection';
+import { ROW_SELECTION_COL_WIDTH } from './utils/useTableDimension';
 
 export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     extends Omit<StandardProps, 'onScroll' | 'children'> {
@@ -339,9 +340,12 @@ const TableTopNav = memo(forwardRef(({ renderTableTopNav, headerProps, isTree }:
             </div>
         )
         : null;
-}));
+}),
+    ((props1, props2) => {
+        return JSON.stringify(props1) === JSON.stringify(props2);
+    }));
 
-const Table = React.forwardRef(
+const Table = React.memo(React.forwardRef(
     <Row extends RowDataType, Key extends RowKeyType>(props: TableProps<Row, Key>, ref) => {
         const {
             affixHeader,
@@ -663,7 +667,9 @@ const Table = React.forwardRef(
             scrollLeft: onScrollLeft
         }));
 
-        const rowWidth = allColumnsWidth > tableWidth.current ? allColumnsWidth : tableWidth.current;
+        const rowWidth = (allColumnsWidth > tableWidth.current)
+            ? allColumnsWidth
+            : tableWidth.current;
 
         // Whether to show vertical scroll bar
         const hasVerticalScrollbar =
@@ -943,7 +949,7 @@ const Table = React.forwardRef(
 
             const fixedStyle: React.CSSProperties = {
                 overflow: 'hidden',
-                width: tableWidth.current,
+                width: tableWidth.current - (rowSelection ? ROW_SELECTION_COL_WIDTH : 0),
             };
 
             // Affix header
@@ -1389,7 +1395,7 @@ const Table = React.forwardRef(
             </RowSelectionWrapper>
         );
     }
-);
+));
 
 Table.displayName = 'Table';
 Table.propTypes = {
