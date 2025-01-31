@@ -145,6 +145,8 @@ const Cell = React.forwardRef(
             ...style,
             width: fullText ? width - 1 : width,
             height: nextHeight,
+            display: 'flex',
+            alignItems: 'center',
             [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding
         };
 
@@ -228,13 +230,6 @@ const Cell = React.forwardRef(
         );
 
         if (removed) return null;
-
-        {/* const isEven = rowIndex && (rowIndex + 1) % 2 === 0;
-
-        const headerColors = `bg-[var(--bg-bt-header)] text-[var(--fg-bt-header)]`;
-        const oddRowColors = `bg-[var(--bg-bt-odd)] text-[var(--fg-bt-odd)]`;
-        const evenRowColors = `bg-[var(--bg-bt-even)] text-[var(--fg-bt-even)]`;
-        const treeColColors = `bg-[var(--bg-bt-tree-col)] text-[var(--fg-bt-tree-col)] cursor-pointer`; */}
 
         return (
             <div
