@@ -418,8 +418,8 @@ const useScrollListener = (props: ScrollListenerProps) => {
     };
 
     const onScrollTop = (top = 0) => {
+
         const [nextScrollY, handleScrollY] = getControlledScrollTopValue(top);
-        const height = getTableHeight();
 
         if (!loading && nextScrollY !== scrollY.current) {
             onScroll?.(Math.abs(scrollX.current), Math.abs(nextScrollY));
@@ -428,16 +428,6 @@ const useScrollListener = (props: ScrollListenerProps) => {
         setScrollY(nextScrollY);
         scrollbarYRef?.current?.resetScrollBarPosition?.(handleScrollY);
         deferUpdatePosition();
-
-        /**
-         * After calling `scrollTop`, a white screen will appear when `virtualized` is true.
-         * The reason is that the coordinates of the DOM are directly manipulated,
-         * but the component is not re-rendered. Need to call `rerender`.
-         * Fix: rsuite#1044
-         */
-        if (virtualized && contentHeight.current > height) {
-            rerender();
-        }
     };
 
     const onScrollLeft = (left = 0) => {

@@ -426,7 +426,7 @@ const Table = React.memo(React.forwardRef(
             prefix
         } = useClassNames(classPrefix, typeof classPrefix !== 'undefined');
 
-        // Use `forceUpdate` to force the component to re-render after manipulating the DOM.
+        {/* // Use `forceUpdate` to force the component to re-render after manipulating the DOM. */ }
         const [, forceUpdate] = useReducer(x => x + 1, 0);
 
         const [expandedRowKeys, setExpandedRowKeys] = useControlled(
@@ -488,23 +488,16 @@ const Table = React.memo(React.forwardRef(
         const scrollbarXRef = useRef<ScrollbarInstance>(null);
         const scrollbarYRef = useRef<ScrollbarInstance>(null);
 
-        const handleTableResizeChange = (_prevSize, event: TableSizeChangeEventName) => {
-            forceUpdate();
-
-            /**
-             * Reset the position of the scroll bar after the table size changes.
-             */
-            if (typeof shouldUpdateScroll === 'function') {
-                onScrollTo(shouldUpdateScroll(event));
-            } else if (shouldUpdateScroll) {
-                const vertical = event === 'bodyHeightChanged';
-                vertical ? onScrollTop(0) : onScrollLeft(0);
+        // TODO: Check should preserve scroll position.
+        // And then only reset the value to the original or current value
+        const handleTableResizeChange = useCallback((_prevSize, event: TableSizeChangeEventName) => {
+            if (event === "bodyHeightChanged") {
+                onScrollTop(Math.abs(scrollY.current));
             }
-
-            if (event === 'bodyWidthChanged') {
-                deferUpdatePosition();
+            if (event === "bodyWidthChanged" || event === "widthChanged") {
+                onScrollLeft(Math.abs(scrollX.current));
             }
-        };
+        }, []);
 
         {/* this is what calculates all the table dimensions  */ }
         const {
@@ -1179,7 +1172,7 @@ const Table = React.memo(React.forwardRef(
             }
 
             return scrollbars;
-        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight,]);
+        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight]);
 
         const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
             const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);

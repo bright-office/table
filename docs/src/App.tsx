@@ -8,8 +8,6 @@ function App() {
     const [data, setData] = useState<data[]>([]);
     const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
-    console.log(selectedRows)
-
     useEffect(() => {
         const data = mockNestedData(101);
         setData(data);
@@ -111,18 +109,24 @@ function App() {
                         urlProp: "href"
                     }
                 }}
-                shouldUpdateScroll={true}
+                shouldUpdateScroll={false}
                 stripeRows
                 data={data}
                 cellBordered
                 height={innerHeight - 200}
-                onRowClick={rowData => {
-                    console.log(rowData);
-                }}
                 onRowSelect={(selectionState) => {
-                    setSelectedRows(selectionState.selectedRows);
+                    console.log(selectionState.selectedRows)
                 }}
             >
+
+                <Column minWidth={200} >
+                    <HeaderCell customizable>sn</HeaderCell>
+                    <Cell>
+                        {(rd, i) => {
+                            return (i || 0 + 1);
+                        }}
+                    </Cell>
+                </Column>
                 <Column minWidth={200} >
                     <HeaderCell customizable>sn</HeaderCell>
                     <Cell dataKey="id" />
