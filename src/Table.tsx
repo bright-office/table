@@ -1,7 +1,6 @@
-import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, memo, forwardRef, ForwardedRef, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, forwardRef, ForwardedRef, useState, useEffect } from 'react';
 import * as ReactIs from 'react-is';
 import { getTranslateDOMPositionXY } from 'dom-lib/esm/translateDOMPositionXY.js';
-import PropTypes from 'prop-types';
 import { isFunction } from "lodash";
 import { debounce } from "lodash";
 import Row, { RowProps } from './Row';
@@ -285,6 +284,9 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
      * Add something at the top of table.Like a navigaiton
      * provides  headersProps.
      * example: Search with some filter icons.
+     * @deprecated
+     * Create the nav yourself to avoid memoization issues.
+     * will be removed in version 0.0.6
      */
     renderTableTopNav?: (headers: Record<string, any>[], isTree: boolean) => ReactNode;
 
@@ -332,7 +334,7 @@ type TableTopNav = {
 }
 
 // Move TableTopNav outside the main component
-const TableTopNav = memo(forwardRef(({ renderTableTopNav, headerProps, isTree }: TableTopNav, ref: ForwardedRef<HTMLDivElement>) => {
+const TableTopNav = forwardRef(({ renderTableTopNav, headerProps, isTree }: TableTopNav, ref: ForwardedRef<HTMLDivElement>) => {
     return renderTableTopNav
         ? (
             <div id="bt-table-top-nav" className='bt-w-full bt-h-max' ref={ref}>
@@ -340,7 +342,7 @@ const TableTopNav = memo(forwardRef(({ renderTableTopNav, headerProps, isTree }:
             </div>
         )
         : null;
-}));
+});
 
 const Table = React.memo(React.forwardRef(
     <Row extends RowDataType, Key extends RowKeyType>(props: TableProps<Row, Key>, ref) => {
@@ -1140,7 +1142,8 @@ const Table = React.memo(React.forwardRef(
             return renderRow(rowProps, cells, shouldRenderExpandedRow, rowData);
         };
 
-        const renderScrollbar = () => {
+        const renderScrollbar = useCallback(() => {
+
             if (disabledScroll) {
                 return null;
             }
@@ -1176,7 +1179,7 @@ const Table = React.memo(React.forwardRef(
             }
 
             return scrollbars;
-        };
+        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight, paginationHeight, tableHeightWithoutTopNav]);
 
         const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
             const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);
@@ -1332,15 +1335,15 @@ const Table = React.memo(React.forwardRef(
         );
 
         return (
-            <RowSelectionWrapper>
-                <TableContext.Provider value={contextValue}>
-                    <div
-                        className="bt-container"
-                        style={{
-                            height: style?.height,
-                            width: style?.width
-                        }}
-                    >
+            <TableContext.Provider value={contextValue}>
+                <div
+                    className="bt-container"
+                    style={{
+                        height: style?.height,
+                        width: style?.width
+                    }}
+                >
+                    <RowSelectionWrapper>
                         <TableTopNav
                             ref={tableTopNavRef}
                             isTree={isTree || false}
@@ -1387,66 +1390,15 @@ const Table = React.memo(React.forwardRef(
                                 />
                             )}
                         </div>
-                    </div>
-                </TableContext.Provider>
-            </RowSelectionWrapper>
+                    </RowSelectionWrapper>
+                </div>
+            </TableContext.Provider >
         );
-    }
-));
+    }), (prev, current) => {
+        return (prev.data === current.data)
+    })
 
 Table.displayName = 'Table';
-Table.propTypes = {
-    autoHeight: PropTypes.bool,
-    fillHeight: PropTypes.bool,
-    affixHeader: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-    affixHorizontalScrollbar: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-    className: PropTypes.string,
-    classPrefix: PropTypes.string,
-    children: PropTypes.any,
-    cellBordered: PropTypes.bool,
-    data: PropTypes.array,
-    defaultExpandAllRows: PropTypes.bool,
-    defaultExpandedRowKeys: PropTypes.array,
-    defaultSortType: PropTypes.any,
-    disabledScroll: PropTypes.bool,
-    expandedRowKeys: PropTypes.array,
-    hover: PropTypes.bool,
-    height: PropTypes.number,
-    headerHeight: PropTypes.number,
-    locale: PropTypes.object,
-    loading: PropTypes.bool,
-    loadAnimation: PropTypes.bool,
-    minHeight: PropTypes.number,
-    maxHeight: PropTypes.number,
-    rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    rowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-    renderTreeToggle: PropTypes.func,
-    renderRowExpanded: PropTypes.func,
-    renderRow: PropTypes.func,
-    rowExpandedHeight: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
-    renderEmpty: PropTypes.func,
-    renderLoading: PropTypes.func,
-    rowClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    rtl: PropTypes.bool,
-    style: PropTypes.object,
-    sortColumn: PropTypes.string,
-    sortType: PropTypes.any,
-    showHeader: PropTypes.bool,
-    shouldUpdateScroll: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-    translate3d: PropTypes.bool,
-    wordWrap: PropTypes.any,
-    width: PropTypes.number,
-    virtualized: PropTypes.bool,
-    isTree: PropTypes.bool,
-    onRowClick: PropTypes.func,
-    onRowContextMenu: PropTypes.func,
-    onScroll: PropTypes.func,
-    onSortColumn: PropTypes.func,
-    onExpandChange: PropTypes.func,
-    onTouchStart: PropTypes.func,
-    onTouchMove: PropTypes.func,
-    onTouchEnd: PropTypes.func,
-};
 
 export interface TableInstance<Row extends RowDataType, Key extends RowKeyType>
     extends React.FunctionComponent<TableProps<Row, Key>> {

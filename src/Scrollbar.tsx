@@ -31,7 +31,7 @@ export interface ScrollbarInstance {
     resetScrollBarPosition: (forceDelta?: number) => void;
 }
 
-const Scrollbar = React.forwardRef((props: ScrollbarProps, ref) => {
+const Scrollbar = React.memo(React.forwardRef((props: ScrollbarProps, ref) => {
     const {
         length = 1,
         scrollLength = 1,
@@ -246,7 +246,7 @@ const Scrollbar = React.forwardRef((props: ScrollbarProps, ref) => {
             />
         </div>
     );
-});
+}));
 
 Scrollbar.displayName = 'Table.Scrollbar';
 

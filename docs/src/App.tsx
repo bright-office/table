@@ -6,11 +6,16 @@ import StyleGuide from "./styleGuide";
 
 function App() {
     const [data, setData] = useState<data[]>([]);
+    const [selectedRows, setSelectedRows] = useState<any[]>([]);
+
+    console.log(selectedRows)
 
     useEffect(() => {
         const data = mockNestedData(101);
         setData(data);
     }, []);
+
+
 
     const serverResponse: larvelPaginationObject = {
         "first_page_url": "https://localschool.test/app/messages?page=1",
@@ -115,7 +120,7 @@ function App() {
                     console.log(rowData);
                 }}
                 onRowSelect={(selectionState) => {
-                    console.log(selectionState)
+                    setSelectedRows(selectionState.selectedRows);
                 }}
             >
                 <Column minWidth={200} >
