@@ -340,10 +340,7 @@ const TableTopNav = memo(forwardRef(({ renderTableTopNav, headerProps, isTree }:
             </div>
         )
         : null;
-}),
-    ((props1, props2) => {
-        return JSON.stringify(props1) === JSON.stringify(props2);
-    }));
+}));
 
 const Table = React.memo(React.forwardRef(
     <Row extends RowDataType, Key extends RowKeyType>(props: TableProps<Row, Key>, ref) => {
