@@ -1136,7 +1136,6 @@ const Table = React.memo(React.forwardRef(
         };
 
         const renderScrollbar = useCallback(() => {
-
             if (disabledScroll) {
                 return null;
             }
@@ -1174,7 +1173,7 @@ const Table = React.memo(React.forwardRef(
             return scrollbars;
         }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight]);
 
-        const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
+        const RenderTableBody = useCallback(({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
             const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);
 
             const bodyStyles = {
@@ -1298,7 +1297,7 @@ const Table = React.memo(React.forwardRef(
                     />
                 </div>
             );
-        };
+        }, [data, renderScrollbar, tableHeightWithoutTopNav, paginationHeight, headerHeight]);
 
         const contextValue = React.useMemo(
             () => ({
