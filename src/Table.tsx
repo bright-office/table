@@ -1395,7 +1395,7 @@ const Table = React.memo(React.forwardRef(
             </TableContext.Provider >
         );
     }), (prev, current) => {
-        return (prev.data === current.data)
+        return (JSON.stringify(prev.data) === JSON.stringify(current.data))
     })
 
 Table.displayName = 'Table';
