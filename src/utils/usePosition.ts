@@ -136,6 +136,7 @@ const usePosition = (props: PositionProps) => {
      */
     const updatePosition = useCallback(
         (nextDuration?: number, nextBezier?: string) => {
+
             if (nextDuration) {
                 duration.current = nextDuration;
             }

@@ -48,6 +48,7 @@ const Scrollbar = React.memo(React.forwardRef((props: ScrollbarProps, ref) => {
 
     const [handlePressed, setHandlePressed] = useState(false);
     const [barOffset, setBarOffset] = useState<Offset | null>({ top: 0, left: 0 });
+
     const scrollOffset = useRef(0);
     const scrollRange = useRef(scrollLength);
     const barRef = useRef<HTMLDivElement>(null);

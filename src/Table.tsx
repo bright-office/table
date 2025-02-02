@@ -698,12 +698,12 @@ const Table = React.memo(React.forwardRef(
         const tableTopNavRef = useRef<HTMLDivElement>(null);
         const paginationRef = useRef<HTMLDivElement>(null);
 
-        const [calculatedTableHeight, setCalculatedTableHeight] = useState({
+        const [calculatedTableHeight, setCalculatedTableHeight] = useState(() => ({
             tableHeightWithoutTopNav: getTableHeight(),
             tableHeightWithoutPagination: getTableHeight(),
             tableTopNavHeight: 0,
             paginationHeight: 0,
-        });
+        }));
 
         const {
             paginationHeight,
@@ -1179,7 +1179,7 @@ const Table = React.memo(React.forwardRef(
             }
 
             return scrollbars;
-        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight, paginationHeight, tableHeightWithoutTopNav]);
+        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight,]);
 
         const RenderTableBody = ({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
             const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);
