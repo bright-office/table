@@ -761,7 +761,7 @@ const Table = React.memo(React.forwardRef(
             props: TableRowProps,
             cells: any[],
             shouldRenderExpandedRow?: boolean,
-            rowData?: Record<any, any>,
+            rowData?: any
         ) => {
             const { depth, rowIndex, ...restRowProps } = props;
 

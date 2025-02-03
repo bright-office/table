@@ -13,8 +13,6 @@ function App() {
         setData(data);
     }, []);
 
-
-
     const serverResponse: larvelPaginationObject = {
         "first_page_url": "https://localschool.test/app/messages?page=1",
         "from": 1,
@@ -115,7 +113,7 @@ function App() {
                 cellBordered
                 height={innerHeight - 200}
                 onRowSelect={(selectionState) => {
-                    console.log(selectionState.selectedRows)
+                    setSelectedRows(selectionState.selectedRows);
                 }}
             >
 

@@ -16,6 +16,9 @@
             background: var(--bt-normal-row-bg);
         }
 
+        &-striped {}
+
+
         &:hover {
 
             .bright-table-cell,
@@ -60,6 +63,15 @@
     .bright-table-cell-group {
         background: var(--bt-normal-row-striped-bg);
     }
+
+    &:hover {
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-normal-row-hover-striped-bg);
+        }
+    }
+
 }
 
 .bt-row-expanded-striped:nth-child(odd) {
@@ -67,5 +79,13 @@
     .bright-table-cell,
     .bright-table-cell-group {
         background: var(--bt-extended-row-striped-bg);
+    }
+
+    &:hover {
+
+        .bright-table-cell,
+        .bright-table-cell-group {
+            background: var(--bt-extended-row-hover-striped-bg);
+        }
     }
 }

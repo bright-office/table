@@ -401,15 +401,6 @@ const useScrollListener = (props: ScrollListenerProps) => {
         [autoHeight, contentHeight, getTableHeight, headerHeight]
     );
 
-    const rerender = () => {
-        setScrolling(true);
-        defer(() => {
-            if (tableBodyRef.current) {
-                setScrolling(false);
-            }
-        });
-    };
-
     const getControlledScrollLeftValue = value => {
         // The maximum range of scrolling value is judged.
         value = Math.min(value, Math.max(0, contentWidth.current - tableWidth.current));

@@ -220,15 +220,22 @@ const Cell = React.forwardRef(
         const isExpandableColumn = hasChildren && isTreeCol;
 
         const content = wordWrap ? (
-            <div className={prefix('wrap')}>
+            <div
+                className={prefix('wrap')}
+                style={{
+                    display: 'flex',
+                }}
+            >
                 {renderTreeNodeExpandIcon()}
                 {renderCell ? renderCell(cellContent) : cellContent}
             </div >
         ) : (
-            <>
+            <div style={{
+                display: "flex",
+            }}>
                 {renderTreeNodeExpandIcon()}
                 {renderCell ? renderCell(cellContent) : cellContent}
-            </>
+            </div>
         );
 
         if (removed) return null;
