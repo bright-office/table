@@ -1,5 +1,4 @@
 import React, { cloneElement, ReactElement, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import { useClassNames } from "./utils";
 import { Icon } from "./Icons";
 import DirectionAwareContainer from "./utils/directionAwareeContainer";
@@ -271,8 +270,5 @@ const Pagination = React.forwardRef<HTMLDivElement, paginationProps>((props, ref
 });
 
 Pagination.displayName = 'Pagination';
-Pagination.prototype = {
-    totalRows: PropTypes.number,
-}
 
 export default Pagination;

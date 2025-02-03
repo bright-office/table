@@ -59,7 +59,7 @@ export interface RowProps extends StandardProps {
 
 }
 
-const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) => {
+const Row = React.memo(React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) => {
     const {
         classPrefix = 'row',
         height = ROW_HEIGHT,
@@ -179,7 +179,7 @@ const Row = React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) =
             {children}
         </div >
     );
-});
+}));
 
 Row.displayName = 'Table.Row';
 

@@ -1171,7 +1171,7 @@ const Table = React.memo(React.forwardRef(
             }
 
             return scrollbars;
-        }, [disabledScroll, hasHorizontalScrollbar, hasVerticalScrollbar, headerHeight]);
+        }, [disabledScroll, hasVerticalScrollbar, hasHorizontalScrollbar]);
 
         const RenderTableBody = useCallback(({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
             const bodyHeight = tableHeightWithoutTopNav - (paginationHeight + headerHeight);
@@ -1387,7 +1387,7 @@ const Table = React.memo(React.forwardRef(
             </TableContext.Provider >
         );
     }), (prev, current) => {
-        return (JSON.stringify(prev.data) === JSON.stringify(current.data))
+        return (JSON.stringify(prev.data) === JSON.stringify(current.data) && prev.loading === current.loading)
     })
 
 Table.displayName = 'Table';

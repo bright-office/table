@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { isNil } from "lodash";
 import { FixedType } from './ColumnResizeHandler';
 import { useUpdateEffect, useClassNames } from './utils';
@@ -63,7 +62,7 @@ export interface HeaderCellProps<Row extends RowDataType, Key extends RowKeyType
 }
 
 
-const HeaderCell = React.forwardRef(
+const HeaderCell = React.memo(React.forwardRef(
     <Row extends RowDataType, Key extends RowKeyType>(
         props: HeaderCellProps<Row, Key>,
         ref: React.Ref<HTMLDivElement>
@@ -183,26 +182,9 @@ const HeaderCell = React.forwardRef(
 
         return null;
     }
-);
+));
 
 HeaderCell.displayName = 'HeaderCell';
-HeaderCell.propTypes = {
-    index: PropTypes.number,
-    sortColumn: PropTypes.string,
-    sortType: PropTypes.oneOf(['desc', 'asc']),
-    sortable: PropTypes.bool,
-    resizable: PropTypes.bool,
-    minWidth: PropTypes.number,
-    onColumnResizeStart: PropTypes.func,
-    onColumnResizeEnd: PropTypes.func,
-    onResize: PropTypes.func,
-    onColumnResizeMove: PropTypes.func,
-    onSortColumn: PropTypes.func,
-    flexGrow: PropTypes.number,
-    fixed: PropTypes.any,
-    children: PropTypes.node,
-    renderSortIcon: PropTypes.func
-};
 
 export default HeaderCell as <Row extends RowDataType, Key extends RowKeyType>(
     props: HeaderCellProps<Row, Key> & React.RefAttributes<HTMLDivElement>

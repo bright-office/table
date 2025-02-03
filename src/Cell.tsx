@@ -60,7 +60,7 @@ const groupKeys = [
     'renderSortIcon'
 ];
 
-const Cell = React.forwardRef(
+const Cell = React.memo(React.forwardRef(
     <Row extends RowDataType, Key extends RowKeyType>(
         props: InnerCellProps<Row, Key>,
         ref: React.Ref<HTMLDivElement>
@@ -257,7 +257,7 @@ const Cell = React.forwardRef(
             </div>
         );
     }
-)
+))
 
 Cell.displayName = 'Table.Cell';
 
