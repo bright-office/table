@@ -57,6 +57,17 @@ export interface RowProps extends StandardProps {
     */
     rowSelection?: boolean;
 
+    /**
+     * Gives a border at the bottom of the row
+     * @default true
+     */
+    rowBordered?: boolean;
+
+    /**
+     * Specifies whether or not to react on row hover.
+     * @default true
+     */
+    rowHover?: boolean;
 }
 
 const Row = React.memo(React.forwardRef((props: RowProps, ref: React.Ref<HTMLDivElement>) => {
@@ -80,6 +91,8 @@ const Row = React.memo(React.forwardRef((props: RowProps, ref: React.Ref<HTMLDiv
         isTreeTable = false,
         rowSelection = false,
         rowData = {},
+        rowBordered = true,
+        rowHover = true,
         ...rest
     } = props as RowProps & {
         "data-depth"?: number
@@ -116,7 +129,10 @@ const Row = React.memo(React.forwardRef((props: RowProps, ref: React.Ref<HTMLDiv
 
     const classes = merge(className,
         withClassPrefix({ header: isHeaderRow, rowspan: rowSpan }),
+        rowHover ? "bt-row-with-hover" : "bt-row-no-hover",
+        rowBordered ? "bt-row-with-border" : "bt-row-no-border",
         "bt-row",
+
         isHeaderRow
             ? "bt-row-header"
             : isExpanded

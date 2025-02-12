@@ -196,6 +196,7 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
      * ``` css
      * --bt-striped-row-bg: background;
      *  ```
+     *  @default true
      */
     stripeRows?: boolean;
 
@@ -205,8 +206,21 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
      * ``` css
      * --bt-striped-extended-row-bg: background;
      *  ```
+     *  @default false
      */
     stripeExtendedRows?: boolean;
+
+    /**
+     * Gives a border at the bottom of the row
+     * @default true
+     */
+    rowBordered?: boolean;
+
+    /**
+     * Specifies whether or not to react on row hover.
+     * @default true
+     */
+    rowHover?: boolean;
 
     /** Tree table, the callback function in the expanded node */
     renderTreeToggle?: (
@@ -408,8 +422,10 @@ const Table = React.memo(React.forwardRef(
             onRowSelect,
             renderTableTopNav,
             onHeaderCustomizeClick,
-            stripeRows,
+            stripeRows = true,
             stripeExtendedRows,
+            rowHover = true,
+            rowBordered = true,
             ...rest
         } = props;
 

@@ -17,7 +17,7 @@
             background: var(--bt-normal-row-bg);
         }
 
-        &:hover {
+        &:hover::not(.bt-row-no-hover) {
 
             .bright-table-cell,
             .bright-table-cell-group {
@@ -45,7 +45,7 @@
             color: var(--bt-expanded-row-color);
         }
 
-        &:hover {
+        &:hover::not(.bt-row-no-hover) {
 
             .bright-table-cell,
             .bright-table-cell-group {
@@ -62,7 +62,7 @@
         background: var(--bt-normal-row-striped-bg);
     }
 
-    &:hover {
+    &:hover::not(.bt-row-no-hover) {
 
         .bright-table-cell,
         .bright-table-cell-group {
@@ -79,7 +79,7 @@
         background: var(--bt-extended-row-striped-bg);
     }
 
-    &:hover {
+    &:hover::not(.bt-row-no-hover) {
 
         .bright-table-cell,
         .bright-table-cell-group {
