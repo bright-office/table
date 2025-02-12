@@ -57,13 +57,8 @@ const RowPerPageSwitcher = (props: rowPerPageSwitcherProps) => {
                 ))}
             </DirectionAwareContainer>
         }
-    </div >
+    </div>
 };
-
-{/* className={"bt-cursor-pointer hover:bt-bg-gray-200 bt-text-gray-700 bt-rounded-sm"} > */ }
-{/* /* option == props.selectedOption */ }
-{/* ? "bg-[var(--blue-primary-500)] bt-text-white hover:bg-[var(--blue-primary-500)]" */ }
-{/* : "RPP-option" */ }
 
 export type larvelPaginationObject = {
     first_page_url: string,
@@ -216,19 +211,28 @@ const Pagination = React.forwardRef<HTMLDivElement, paginationProps>((props, ref
     const NumberedSwitcher = () => {
         return <div className={(prefix("numbered-switcher"), "bt-pagination-nps")}>
             {serverResponse.links.slice(1, serverResponse.links.length - 1).map((link, index) => {
-                const isDisabled = link.active;
+                const isDisabled = link.active || (link.label === "...");
 
-                return cloneElement(linkComponent.element, {
+                const linkComp = isDisabled
+                    ? <button></button>
+                    : linkComponent.element;
+
+                return cloneElement(linkComp, {
                     onClick: () => {
+                        if (isDisabled)
+                            return;
+
                         onPageChange?.(parseInt(link.label))
                     },
-                    [linkComponent.urlProp]: isDisabled ? null : `${link.url}&per_page=${serverResponse.per_page}`,
+                    [linkComponent.urlProp]: isDisabled
+                        ? null
+                        : `${link.url}&per_page=${serverResponse.per_page}`,
                     role: "button",
                     key: `page-${index}`,
-                    "aria-disabled": link.active,
+                    "aria-disabled": isDisabled,
+                    disabled: isDisabled,
                     className: `
                     bt-pagination-nps-btn
-                    ${(link.label === "...") && "bt-pagination-nps-btn-unknown"} 
                     ${isDisabled && "bt-pagination-nps-btn-disabled"} 
                     ${link.active && "bt-pagination-nps-btn-active"}`,
                     children: link.label

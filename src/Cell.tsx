@@ -208,7 +208,7 @@ const Cell = React.memo(React.forwardRef(
                 );
             }
 
-            if (isTreeCol)
+            if (isTreeCol && !isHeaderCell)
                 return <span style={{
                     width: 24,
                 }}>
