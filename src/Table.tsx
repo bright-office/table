@@ -484,12 +484,14 @@ const Table = React.memo(React.forwardRef(
 
         // Check for the existence of fixed columns in all column properties.
         const shouldFixedColumn = children.some(
-            child => ReactIs.isElement(child) && child?.props?.fixed
+            child => {
+                return React.isValidElement(child) && child?.props?.fixed
+            }
         );
 
         // Check all column properties for the existence of rowSpan.
         const shouldRowSpanColumn = children.some(
-            child => ReactIs.isElement(child) && child?.props?.rowSpan
+            child => React.isValidElement(child) && child?.props?.rowSpan
         );
 
         const visibleRows = useRef<React.ReactNode[]>([]);

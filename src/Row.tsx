@@ -141,6 +141,7 @@ const Row = React.memo(React.forwardRef((props: RowProps, ref: React.Ref<HTMLDiv
 
         // NOTE: This can be refactored and made a little cleaner and predicatable.
         // Stripe rows
+
         !isHeaderRow && (stripeRows && !isExpanded) ? "bt-row-normal-striped" : "",
         !isHeaderRow && (stripeExtendedRows && isExpanded) ? "bt-row-expanded-striped" : "",
 
