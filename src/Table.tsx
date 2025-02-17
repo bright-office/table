@@ -223,6 +223,12 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
    */
   rowHover?: boolean;
 
+  /**
+   * Sets the force render function.
+   * which can be used to manually reload the table.
+   */
+  setForceRender?: (fn: () => void) => void;
+
   /** Tree table, the callback function in the expanded node */
   renderTreeToggle?: (
     expandButton: React.ReactNode,
@@ -434,6 +440,7 @@ const Table = React.memo(React.forwardRef(
       rowHover = true,
       rowBordered = true,
       setColumnStatus,
+      setForceRender,
       ...rest
     } = props;
 
@@ -452,6 +459,10 @@ const Table = React.memo(React.forwardRef(
 
     {/* // Use `forceUpdate` to force the component to re-render after manipulating the DOM. */ }
     const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    useEffect(() => {
+      setForceRender?.(forceUpdate);
+    }, [forceUpdate])
 
     const [expandedRowKeys, setExpandedRowKeys] = useControlled(
       expandedRowKeysProp,

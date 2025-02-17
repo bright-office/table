@@ -53,6 +53,7 @@ interface CellDescriptor {
 export type tbtColumnStatus = Record<string, {
   hidden: boolean,
   pinned: "right" | "left" | false,
+  displayName: string,
 }>
 
 /**
@@ -216,12 +217,14 @@ const useCellDescriptor = <Row extends RowDataType>(
     if (!React.isValidElement(column))
       return
 
-    const columnName = (column.props.children?.[0]?.props.children || "")?.toLowerCase();
+    const columnName = (column.props.children?.[0]?.props.children || "")
+    const columnKey = columnName.toLowerCase();
 
     const isHidden = column.props.isHidden;
-    columnStatusCalc[columnName] = {
-      ...columnStatusCalc[columnName],
-      hidden: isHidden || false
+    columnStatusCalc[columnKey] = {
+      ...columnStatusCalc[columnKey],
+      hidden: isHidden || false,
+      displayName: columnName,
     }
 
     if (isHidden)
@@ -236,25 +239,28 @@ const useCellDescriptor = <Row extends RowDataType>(
 
     if (ignoreRightPinned) {
       rightPinnedCols.push(column);
-      columnStatusCalc[columnName] = {
-        ...columnStatusCalc[columnName],
+      columnStatusCalc[columnKey] = {
+        ...columnStatusCalc[columnKey],
         pinned: "right",
+        displayName: columnName,
       }
       return;
     }
 
     if (ignoreUnpinned) {
       unpinnedCols.push(column);
-      columnStatusCalc[columnName] = {
-        ...columnStatusCalc[columnName],
+      columnStatusCalc[columnKey] = {
+        ...columnStatusCalc[columnKey],
         pinned: false,
+        displayName: columnName,
       }
       return;
     }
 
-    columnStatusCalc[columnName] = {
-      ...columnStatusCalc[columnName],
+    columnStatusCalc[columnKey] = {
+      ...columnStatusCalc[columnKey],
       pinned: isCurrentLeftPinned ? "left" : false,
+      displayName: columnName,
     }
 
     const columnChildren = column.props.children as React.ReactNode[];
@@ -377,6 +383,7 @@ const useCellDescriptor = <Row extends RowDataType>(
 
     left += cellWidth;
   }
+
 
   // left pinned
   React.Children.forEach(columns, extractCellInfo);
