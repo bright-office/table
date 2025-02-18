@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useRef } from 'react';
-import addStyle from 'dom-lib/esm/addStyle.js';
 import addClass from 'dom-lib/esm/addClass.js';
 import removeClass from 'dom-lib/esm/removeClass.js';
 import { omit } from "lodash";
 import { merge } from "lodash";
-import { SCROLLBAR_WIDTH, SORT_TYPE } from '../constants';
+import { SORT_TYPE } from '../constants';
 import { SortType, RowDataType } from '../@types/common';
 import useControlled from './useControlled';
 import getTableColumns from './getTableColumns';
@@ -12,7 +11,6 @@ import getTotalByColumns from './getTotalByColumns';
 import getColumnProps from './getColumnProps';
 import useUpdateEffect from './useUpdateEffect';
 import { ColumnProps } from '../Column';
-import flushSync from './flushSync';
 import useMount from './useMount';
 import { ROW_SELECTION_COL_WIDTH } from './useTableDimension';
 
@@ -66,9 +64,6 @@ const useCellDescriptor = <Row extends RowDataType>(
 ): CellDescriptor => {
   const {
     children,
-    rtl,
-    mouseAreaRef,
-    tableRef,
     minScrollX,
     scrollX,
     tableWidth,
@@ -79,8 +74,6 @@ const useCellDescriptor = <Row extends RowDataType>(
     sortColumn,
     rowHeight,
     onSortColumn,
-    onHeaderCellResize,
-    prefix,
     setColumnStatus,
   } = props;
 
@@ -90,26 +83,6 @@ const useCellDescriptor = <Row extends RowDataType>(
   const clearCache = useCallback(() => {
     setCacheData(null);
   }, []);
-
-  const setColumnResizing = useCallback(
-    (resizing: boolean) => {
-      if (!tableRef.current) {
-        return;
-      }
-      if (resizing) {
-        addClass(tableRef.current, prefix('column-resizing'));
-      } else {
-        removeClass(tableRef.current, prefix('column-resizing'));
-      }
-    },
-    [prefix, tableRef]
-  );
-
-  /**
-   * storage column width from props.
-   * if current column width not equal initial column width, use current column width and update cache.
-   */
-  const initialColumnWidths = useRef({});
 
   const columnWidths = useRef({});
 
@@ -122,53 +95,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     clearCache();
   }, [children, sortColumn, sortType, tableWidth.current, scrollX.current, minScrollX.current]);
 
-  const handleColumnResizeEnd = useCallback(
-    (columnWidth: number, _cursorDelta: number, dataKey: any, index: number) => {
-      columnWidths.current[`${dataKey}_${index}_width`] = columnWidth;
-
-      setColumnResizing(false);
-
-      if (mouseAreaRef.current) {
-        addStyle(mouseAreaRef.current, { display: 'none' });
-      }
-
-      // fix: https://github.com/rsuite/rsuite-table/issues/398
-      flushSync(() => clearCache());
-      onHeaderCellResize?.(columnWidth, dataKey);
-    },
-    [clearCache, mouseAreaRef, onHeaderCellResize, setColumnResizing]
-  );
-
-  const handleColumnResizeMove = useCallback(
-    (width: number, left: number, fixed: boolean) => {
-      let mouseAreaLeft = width + left;
-      let x = mouseAreaLeft;
-      let dir = 'left';
-
-      if (rtl) {
-        mouseAreaLeft += minScrollX.current + SCROLLBAR_WIDTH;
-        dir = 'right';
-      }
-
-      if (!fixed) {
-        x = mouseAreaLeft + (rtl ? -scrollX.current : scrollX.current);
-      }
-
-      if (mouseAreaRef.current) {
-        addStyle(mouseAreaRef.current, { display: 'block', [dir]: `${x}px` });
-      }
-    },
-    [minScrollX, mouseAreaRef, rtl, scrollX]
-  );
-
-  const handleColumnResizeStart = useCallback(
-    (width: number, left: number, fixed: boolean) => {
-      setColumnResizing(true);
-      handleColumnResizeMove(width, left, fixed);
-    },
-    [handleColumnResizeMove, setColumnResizing]
-  );
-
+  // TODO: look at this if it helps me with anything.
   const handleSortColumn = useCallback(
     (dataKey: string) => {
       let nextSortType = sortType;
@@ -210,7 +137,9 @@ const useCellDescriptor = <Row extends RowDataType>(
 
   const columns = getTableColumns(children) as React.ReactElement[];
   const count = columns.length;
-  const { totalFlexGrow, totalWidth } = getTotalByColumns<Row>(columns);
+  const { totalVisibleColWidth, totalVisibleFlexGrow, totalFlexGrow, totalWidth } = getTotalByColumns<Row>(columns);
+
+  // calculating the column status such as hidden, pin etc 
   let columnStatusCalc = {}
 
   const extractCellInfo = (column: React.ReactElement<ColumnProps<Row>>, index: number, ignorePinCheck = false) => {
@@ -218,7 +147,7 @@ const useCellDescriptor = <Row extends RowDataType>(
       return
 
     const columnName = (column.props.children?.[0]?.props.children || "")
-    const columnKey = columnName.toLowerCase();
+    const columnKey = columnName.toLowerCase?.();
 
     const isHidden = column.props.isHidden;
     columnStatusCalc[columnKey] = {
@@ -282,7 +211,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     const cellWidthId = `${cell.props.dataKey}_${index}_width`;
 
     // get column width from cache.
-    const initialColumnWidth = initialColumnWidths.current?.[cellWidthId];
+    /* const initialColumnWidth = initialColumnWidths.current?.[cellWidthId]; */
 
     const currentWidth = columnWidths.current?.[cellWidthId];
 
@@ -290,33 +219,38 @@ const useCellDescriptor = <Row extends RowDataType>(
 
     const isControlled = typeof width === 'number' && typeof onResize === 'function';
 
-    /**
-     * in resizable mode,
-     *    if width !== initialColumnWidth, use current column width and update cache.
-     */
-    if (resizable && (initialColumnWidth || width) && initialColumnWidth !== width) {
-      // initial or update initialColumnWidth cache.
-      initialColumnWidths.current[cellWidthId] = width;
-      /**
-       * if currentWidth exist, update columnWidths cache.
-       */
-      if (currentWidth) {
-        columnWidths.current[cellWidthId] = width;
-        // update cellWidth
-        cellWidth = width;
-      }
-    }
 
-    if (tableWidth.current && flexGrow && totalFlexGrow) {
+    // TODO: REmove this after verification since we are not supporting resizable columns
+    // /**
+    //  * in resizable mode,
+    //  *    if width !== initialColumnWidth, use current column width and update cache.
+    //  */
+    // if (resizable && (initialColumnWidth || width) && initialColumnWidth !== width) {
+    //   // initial or update initialColumnWidth cache.
+    //   initialColumnWidths.current[cellWidthId] = width;
+    //   /**
+    //    * if currentWidth exist, update columnWidths cache.
+    //    */
+    //   if (currentWidth) {
+    //     columnWidths.current[cellWidthId] = width;
+    //     // update cellWidth
+    //     cellWidth = width;
+    //   }
+    // }
+
+    if (tableWidth.current && flexGrow && totalVisibleFlexGrow) {
       const grewWidth = Math.max(
-        ((tableWidth.current - totalWidth) / totalFlexGrow) * flexGrow,
+        ((tableWidth.current - totalVisibleColWidth) / totalVisibleFlexGrow) * flexGrow,
         minWidth || 60
       );
       /**
        * resizable = false, width will be recalc when table render.
        * resizable = true, only first render will use grewWidth.
        */
-      cellWidth = resizable ? currentWidth || grewWidth : grewWidth;
+
+      // TODO: Remove this after verification.
+      // cellWidth = resizable ? currentWidth || grewWidth : grewWidth;
+      cellWidth = grewWidth;
     }
 
     let uniqueKey = `left-${index}`;
@@ -365,15 +299,6 @@ const useCellDescriptor = <Row extends RowDataType>(
         sortColumn,
         flexGrow: resizable ? undefined : flexGrow
       };
-
-      if (resizable) {
-        merge(headerCellProps, {
-          onResize,
-          onColumnResizeEnd: handleColumnResizeEnd,
-          onColumnResizeStart: handleColumnResizeStart,
-          onColumnResizeMove: handleColumnResizeMove
-        });
-      }
 
       headerCells.push(React.cloneElement(headerCell,
         { ...cellProps, ...headerCellProps }));

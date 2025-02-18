@@ -1,5 +1,4 @@
 import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, forwardRef, ForwardedRef, useState, useEffect } from 'react';
-import * as ReactIs from 'react-is';
 import { getTranslateDOMPositionXY } from 'dom-lib/esm/translateDOMPositionXY.js';
 import { isFunction } from "lodash";
 import { debounce } from "lodash";
@@ -1425,7 +1424,13 @@ const Table = React.memo(React.forwardRef(
       </TableContext.Provider >
     );
   }), (prev, current) => {
-    return (JSON.stringify(prev.data) === JSON.stringify(current.data) && prev.loading === current.loading)
+    const isDataEqual = JSON.stringify(prev.data) === JSON.stringify(current.data);
+    const isLoadingStateSame = prev.loading === current.loading;
+    const hasChildrenChanged = prev.children === current.children
+
+    return (
+      isDataEqual && isLoadingStateSame && hasChildrenChanged
+    )
   })
 
 Table.displayName = 'Table';
