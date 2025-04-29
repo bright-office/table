@@ -1,11 +1,17 @@
 .bt-header {
+  &-cust-icon {
+    cursor: pointer;
 
-    &-cust-icon {
-        cursor: pointer;
-
-        &:hover {
-            color: var(--bt-cust-icon-color);
-            background-color: var(--bt-cust-icon-bg);
-        }
+    &:hover {
+      color: var(--bt-cust-icon-color);
+      background-color: var(--bt-cust-icon-bg);
     }
+  }
+
+  &-cust {
+    &:hover {
+      background-color: var(--bt-cust-bg);
+      color: var(--bt-cust-color);
+    }
+  }
 }

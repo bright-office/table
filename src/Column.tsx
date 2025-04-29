@@ -1,7 +1,7 @@
 import React from 'react';
 import { RowDataType } from './@types/common';
 
-export interface ColumnProps<Row extends RowDataType> {
+export type ColumnProps<Row extends RowDataType> = {
   /** Alignment */
   align?: React.CSSProperties['justifyContent'];
 
@@ -10,9 +10,6 @@ export interface ColumnProps<Row extends RowDataType> {
 
   /** Merges rows on the specified column. */
   rowSpan?: (rowData: Row) => number;
-
-  /** Fixed column */
-  fixed?: boolean | 'left' | 'right';
 
   /** Whether to display the full text of the cell content when the mouse is hovered */
   fullText?: boolean;
@@ -45,6 +42,39 @@ export interface ColumnProps<Row extends RowDataType> {
   onResize?: (columnWidth?: number, dataKey?: string) => void;
 
   isHidden?: boolean;
+} & (tnoCustomizableFields | tcustomizableField)
+
+export type tnoCustomizableFields = {
+  /**
+   * Customizable Field 
+   * if set to true, the column can be customized
+   * by customized I mean, it can be searched, sorted, or hidden.
+   */
+  customizable?: undefined | false,
+  id?: string
+
+  sort?: never;
+  pinned?: never;
+  hidden?: never;
+  onHeaderClick?: never;
+}
+
+export type tcustomizableField = {
+  /**
+   * Customizable Field 
+   * if set to true, the column can be customized
+   * by customized I mean, it can be searched, sorted, or hidden.
+   */
+  customizable?: true;
+  id: string;
+  sort?: "asc" | "desc";
+  pinned?: "right" | "left";
+
+  /**
+   * When the header is clicked,
+   * the callback function will be called.
+   */
+  onHeaderClick?: (headerProps: Record<string, any>, event: React.MouseEvent) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

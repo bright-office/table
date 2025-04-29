@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, forwardRef, ForwardedRef, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useImperativeHandle, useReducer, useMemo, ReactNode, cloneElement, useState, useEffect } from 'react';
 import { getTranslateDOMPositionXY } from 'dom-lib/esm/translateDOMPositionXY.js';
 import { isFunction } from "lodash";
 import { debounce } from "lodash";
@@ -183,13 +183,6 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
    */
   wordWrap?: boolean | 'break-all' | 'break-word' | 'keep-all';
 
-  /** Effectively render large tabular data
-   * Virtualized list is not required for now.
-   * Other ways of loading data is being researched.
-   * @deprecated
-  **/
-  virtualized?: boolean;
-
   /**
    * Control whether to strip rows or not 
    * To control the stripe color, change the css variable
@@ -318,9 +311,8 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
 
   /**
    * Header customize btn click function.
-   *
    */
-  onHeaderCustomizeClick?: (headerProps: Record<string, any>, event: React.MouseEvent) => void;
+  onHeaderClick?: (headerProps: Record<string, any>, event: React.MouseEvent) => void;
 
   children?:
   | React.ReactNode
@@ -335,7 +327,6 @@ export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
       props: HeaderCellProps<Row, Key> & React.RefAttributes<HTMLDivElement>
     ) => React.ReactElement;
   }) => React.ReactNode | React.ReactNode[]);
-
 }
 
 interface TableRowProps extends RowProps {
@@ -352,23 +343,6 @@ const getChildrenProps = {
   Column,
   ColumnGroup
 };
-
-type TableTopNav = {
-  renderTableTopNav?: (headers: Record<string, any>[], isTree: boolean) => ReactNode,
-  headerProps: Record<string, any>[],
-  isTree: boolean
-}
-
-// Move TableTopNav outside the main component
-const TableTopNav = forwardRef(({ renderTableTopNav, headerProps, isTree }: TableTopNav, ref: ForwardedRef<HTMLDivElement>) => {
-  return renderTableTopNav
-    ? (
-      <div id="bt-table-top-nav" className='bt-w-full bt-h-max' ref={ref}>
-        {renderTableTopNav(headerProps, isTree)}
-      </div>
-    )
-    : null;
-});
 
 const Table = React.memo(React.forwardRef(
   <Row extends RowDataType, Key extends RowKeyType>(props: TableProps<Row, Key>, ref) => {
@@ -407,7 +381,6 @@ const Table = React.memo(React.forwardRef(
       rtl: rtlProp,
       translate3d,
       rowKey,
-      virtualized,
       rowClassName,
       rowExpandedHeight = 100,
       disabledScroll,
@@ -432,8 +405,7 @@ const Table = React.memo(React.forwardRef(
       // pagination properties
       pagination,
       onRowSelect,
-      renderTableTopNav,
-      onHeaderCustomizeClick,
+      onHeaderClick,
       stripeRows = true,
       stripeExtendedRows,
       rowHover = true,
@@ -444,7 +416,7 @@ const Table = React.memo(React.forwardRef(
     } = props;
 
     const children = useMemo(
-      () => flattenChildren(isFunction(getChildren) ? getChildren(getChildrenProps) : getChildren),
+      () => flattenChildren(isFunction(getChildren) ? getChildren(getChildrenProps as any) : getChildren),
       [getChildren]
     );
 
@@ -617,7 +589,6 @@ const Table = React.memo(React.forwardRef(
       rtl,
       data: dataProp,
       height,
-      virtualized,
       getTableHeight,
       contentHeight,
       headerHeight,
@@ -725,13 +696,11 @@ const Table = React.memo(React.forwardRef(
       ...style
     };
 
-    const tableTopNavRef = useRef<HTMLDivElement>(null);
     const paginationRef = useRef<HTMLDivElement>(null);
 
     const [calculatedTableHeight, setCalculatedTableHeight] = useState(() => ({
       tableHeightWithoutTopNav: getTableHeight(),
       tableHeightWithoutPagination: getTableHeight(),
-      tableTopNavHeight: 0,
       paginationHeight: 0,
     }));
 
@@ -745,7 +714,6 @@ const Table = React.memo(React.forwardRef(
       let tableHeightWithoutTopNav = getTableHeight();
 
       setCalculatedTableHeight((prev) => {
-        let tableTopNavHeight = 0;
         let paginationHeight = 0;
 
         if (pagination && (pagination.serverResponse?.links?.length || 0 > 3)) {
@@ -753,23 +721,18 @@ const Table = React.memo(React.forwardRef(
           tableHeightWithoutPagination -= paginationHeight;
         }
 
-        if (renderTableTopNav) {
-          tableTopNavHeight = tableTopNavRef.current?.getBoundingClientRect().height || 0;
-        }
-
-        if (!tableTopNavHeight && !paginationHeight)
+        if (!paginationHeight)
           return prev;
 
         return {
           paginationHeight,
-          tableTopNavHeight,
           tableHeightWithoutTopNav,
           tableHeightWithoutPagination,
         }
 
       })
 
-    }, [tableTopNavRef.current, paginationRef.current])
+    }, [paginationRef.current])
 
 
     const renderRowExpanded = useCallback(
@@ -804,6 +767,7 @@ const Table = React.memo(React.forwardRef(
 
       const rowId = rowData?.id;
 
+      // Actually location where headers gets rendered
       if (props.isHeaderRow) {
         cells = cells.map((cell) => {
           const isCustomizable = cell?.props?.customizable;
@@ -812,7 +776,7 @@ const Table = React.memo(React.forwardRef(
           if (isCustomizable && !hasOnHeaderCustomizeClick) {
             const updatedCell = cloneElement(cell, {
               ...cell.props,
-              onHeaderCustomizeClick: onHeaderCustomizeClick
+              onHeaderClick: cell.props?.onHeaderClick ?? onHeaderClick,
             })
             return updatedCell
           }
@@ -1219,8 +1183,6 @@ const Table = React.memo(React.forwardRef(
       };
 
       let contentHeight = 0;
-      let topHideHeight = 0;
-      let bottomHideHeight = 0;
 
       visibleRows.current = [];
 
@@ -1283,16 +1245,6 @@ const Table = React.memo(React.forwardRef(
           };
 
           top += nextRowHeight;
-
-          if (virtualized && !wordWrap) {
-            if (top + nextRowHeight < minTop) {
-              topHideHeight += nextRowHeight;
-              continue;
-            } else if (top > maxTop) {
-              bottomHideHeight += nextRowHeight;
-              continue;
-            }
-          }
 
           visibleRows.current.push(renderRowData(bodyCells, rowData, rowProps, expandedRow));
         }
@@ -1357,12 +1309,6 @@ const Table = React.memo(React.forwardRef(
       return null;
     }
 
-    // Memoize headerProps
-    const headerProps = useMemo(() =>
-      (headerCells as any)?.map((header: any) => header.props),
-      [headerCells] // Only recalculate if headerCells changes
-    );
-
     return (
       <TableContext.Provider value={contextValue}>
         <div
@@ -1373,12 +1319,6 @@ const Table = React.memo(React.forwardRef(
           }}
         >
           <RowSelectionWrapper>
-            <TableTopNav
-              ref={tableTopNavRef}
-              isTree={isTree || false}
-              renderTableTopNav={renderTableTopNav}
-              headerProps={headerProps}
-            />
 
             <div
               className='bt-wrapper bt-relative bt-border bt-border-[var(--border-color)] bt-rounded-md'

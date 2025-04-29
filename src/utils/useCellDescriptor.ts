@@ -1,11 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
-import addClass from 'dom-lib/esm/addClass.js';
-import removeClass from 'dom-lib/esm/removeClass.js';
 import { omit } from "lodash";
-import { merge } from "lodash";
-import { SORT_TYPE } from '../constants';
 import { SortType, RowDataType } from '../@types/common';
-import useControlled from './useControlled';
 import getTableColumns from './getTableColumns';
 import getTotalByColumns from './getTotalByColumns';
 import getColumnProps from './getColumnProps';
@@ -22,12 +17,8 @@ interface CellDescriptorProps<Row> {
   tableWidth: React.MutableRefObject<number>;
   headerHeight: number;
   showHeader: boolean;
-  sortType?: SortType;
-  defaultSortType?: SortType;
-  sortColumn?: string;
   prefix: (str: string) => string;
   onSortColumn?: (dataKey: string, sortType?: SortType) => void;
-  onHeaderCellResize?: (width: number, dataKey: string) => void;
   rowHeight?: number | ((rowData?: Row) => number);
   mouseAreaRef: React.RefObject<HTMLDivElement>;
   tableRef: React.RefObject<HTMLDivElement>;
@@ -52,6 +43,7 @@ export type tbtColumnStatus = Record<string, {
   hidden: boolean,
   pinned: "right" | "left" | false,
   displayName: string,
+  id: string,
 }>
 
 /**
@@ -69,15 +61,10 @@ const useCellDescriptor = <Row extends RowDataType>(
     tableWidth,
     headerHeight,
     showHeader,
-    sortType: sortTypeProp,
-    defaultSortType,
-    sortColumn,
     rowHeight,
-    onSortColumn,
     setColumnStatus,
   } = props;
 
-  const [sortType, setSortType] = useControlled(sortTypeProp, defaultSortType);
   const [cacheData, setCacheData] = useState<CellDescriptor | null>();
 
   const clearCache = useCallback(() => {
@@ -93,22 +80,7 @@ const useCellDescriptor = <Row extends RowDataType>(
 
   useUpdateEffect(() => {
     clearCache();
-  }, [children, sortColumn, sortType, tableWidth.current, scrollX.current, minScrollX.current]);
-
-  // TODO: look at this if it helps me with anything.
-  const handleSortColumn = useCallback(
-    (dataKey: string) => {
-      let nextSortType = sortType;
-      if (sortColumn === dataKey) {
-        nextSortType =
-          sortType === SORT_TYPE.ASC ? (SORT_TYPE.DESC as SortType) : (SORT_TYPE.ASC as SortType);
-
-        setSortType(nextSortType);
-      }
-      onSortColumn?.(dataKey, nextSortType);
-    },
-    [onSortColumn, setSortType, sortColumn, sortType]
-  );
+  }, [children, tableWidth.current, scrollX.current, minScrollX.current]);
 
   if (cacheData) {
     return cacheData;
@@ -137,7 +109,7 @@ const useCellDescriptor = <Row extends RowDataType>(
 
   const columns = getTableColumns(children) as React.ReactElement[];
   const count = columns.length;
-  const { totalVisibleColWidth, totalVisibleFlexGrow, totalFlexGrow, totalWidth } = getTotalByColumns<Row>(columns);
+  const { totalVisibleColWidth, totalVisibleFlexGrow } = getTotalByColumns<Row>(columns);
 
   // calculating the column status such as hidden, pin etc 
   let columnStatusCalc = {}
@@ -147,7 +119,8 @@ const useCellDescriptor = <Row extends RowDataType>(
       return
 
     const columnName = (column.props.children?.[0]?.props.children || "")
-    const columnKey = columnName.toLowerCase?.();
+
+    const columnKey = column.props.id || columnName.toLowerCase?.();
 
     const isHidden = column.props.isHidden;
     columnStatusCalc[columnKey] = {
@@ -159,8 +132,9 @@ const useCellDescriptor = <Row extends RowDataType>(
     if (isHidden)
       return;
 
-    const isCurrentRightPinned = column.props.fixed === "right";
-    const isCurrentLeftPinned = column.props.fixed === "left" || column.props.fixed;
+    const isCurrentRightPinned = column.props.pinned === "right";
+    const isCurrentLeftPinned = column.props.pinned === "left" || column.props.pinned;
+
     const isCurrentUnpinned = !isCurrentLeftPinned && !isCurrentRightPinned;
 
     const ignoreRightPinned = isCurrentRightPinned && !ignorePinCheck;
@@ -195,7 +169,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     const columnChildren = column.props.children as React.ReactNode[];
     const columnProps = getColumnProps(column);
 
-    const { width, resizable, flexGrow, minWidth, onResize, treeCol } = columnProps;
+    const { width, flexGrow, minWidth, onResize, treeCol } = columnProps;
 
     if (treeCol) {
       hasCustomTreeCol = true;
@@ -218,25 +192,6 @@ const useCellDescriptor = <Row extends RowDataType>(
     let cellWidth = currentWidth || width || 0;
 
     const isControlled = typeof width === 'number' && typeof onResize === 'function';
-
-
-    // TODO: REmove this after verification since we are not supporting resizable columns
-    // /**
-    //  * in resizable mode,
-    //  *    if width !== initialColumnWidth, use current column width and update cache.
-    //  */
-    // if (resizable && (initialColumnWidth || width) && initialColumnWidth !== width) {
-    //   // initial or update initialColumnWidth cache.
-    //   initialColumnWidths.current[cellWidthId] = width;
-    //   /**
-    //    * if currentWidth exist, update columnWidths cache.
-    //    */
-    //   if (currentWidth) {
-    //     columnWidths.current[cellWidthId] = width;
-    //     // update cellWidth
-    //     cellWidth = width;
-    //   }
-    // }
 
     if (tableWidth.current && flexGrow && totalVisibleFlexGrow) {
       const grewWidth = Math.max(
@@ -274,7 +229,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     }
 
     const cellProps = {
-      ...omit(columnProps, ['children']),
+      ...omit(columnProps, ['children', "pinned", "sort", "onHeaderClick", "customizable"]),
       'aria-colindex': index + 1,
       left,
       headerHeight,
@@ -282,26 +237,33 @@ const useCellDescriptor = <Row extends RowDataType>(
       width: isControlled ? width : cellWidth,
       height: typeof rowHeight === 'function' ? rowHeight() : rowHeight,
       firstColumn: isFirstCol,
-      lastColumn: isLastCol
+      lastColumn: isLastCol,
     };
 
     if (showHeader && headerHeight) {
       const headerCellProps = {
-        // Resizable column
-        // `index` is used to define the serial number when dragging the column width
         index,
         dataKey: cell.props.dataKey,
         isHeaderCell: true,
         minWidth: columnProps.minWidth,
-        sortable: columnProps.sortable,
-        onSortColumn: handleSortColumn,
-        sortType,
-        sortColumn,
-        flexGrow: resizable ? undefined : flexGrow
+        flexGrow: flexGrow,
+        customizable: columnProps.customizable,
+        pinned: isCurrentLeftPinned
+          ? "left"
+          : isCurrentRightPinned
+            ? "right"
+            : undefined,
+        sort: columnProps.sort,
       };
 
-      headerCells.push(React.cloneElement(headerCell,
-        { ...cellProps, ...headerCellProps }));
+      headerCells.push(
+        React.cloneElement(headerCell,
+          {
+            onHeaderClick: column.props.onHeaderClick,
+            ...cellProps,
+            ...headerCellProps
+          })
+      );
     }
 
     bodyCells.push(React.cloneElement(cell, cellProps));
@@ -327,7 +289,10 @@ const useCellDescriptor = <Row extends RowDataType>(
     columns,
     headerCells,
     bodyCells,
-    allColumnsWidth: left + (props.hasRowSelection ? ROW_SELECTION_COL_WIDTH : 0),
+    allColumnsWidth: left
+      + (props.hasRowSelection
+        ? ROW_SELECTION_COL_WIDTH
+        : 0),
     hasCustomTreeCol
   };
 

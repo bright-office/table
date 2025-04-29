@@ -6,7 +6,6 @@ import StyleGuide from "./styleGuide";
 
 function App() {
   const [data, setData] = useState<data[]>([]);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   useEffect(() => {
     const data = mockNestedData(101);
@@ -77,24 +76,14 @@ function App() {
     "to": 10,
     "total": 697
   }
+  const [sort, setSort] = useState<"asc" | "desc" | undefined>();
 
   return (
-    <div className="p-20">
-      <h1>
-        MP
-      </h1>
-
+    <div className="p-20 h-full">
       <Table
         name="MP"
         rowSelection
         headerHeight={80}
-        renderTableTopNav={() => {
-          return (
-            <div className="flex items-center justify-between h-20 bg-blue-500 text-white">
-              I am the nav
-            </div>
-          )
-        }}
         isTree
         rowKey={"id"}
         pagination={{
@@ -112,33 +101,49 @@ function App() {
         data={data}
         cellBordered
         height={innerHeight - 200}
-        onRowSelect={(selectionState) => {
-          setSelectedRows(selectionState.selectedRows);
-        }}
       >
-
-        <Column width={200}>
-          <HeaderCell customizable>sn</HeaderCell>
+        <Column width={200} customizable id="sn">
+          <HeaderCell>
+            sn
+          </HeaderCell>
           <Cell>
-            {(rd, i) => {
+            {(_, i) => {
               return (i || 0 + 1);
             }}
           </Cell>
         </Column>
+
         <ColumnGroup header="User Name">
-          <Column width={250}>
+          <Column width={250} id="firstname">
             <HeaderCell>First Name</HeaderCell>
             <Cell dataKey="firstname" />
           </Column>
 
-          <Column width={150}>
+          <Column width={150} customizable id="lastname">
             <HeaderCell>Last Name</HeaderCell>
             <Cell dataKey="lastname" />
           </Column>
 
         </ColumnGroup>
 
-        <Column width={300} flexGrow={1} align="left">
+        <Column width={300}
+          flexGrow={1}
+          align="left"
+          customizable
+          id="email"
+          sort={sort}
+          onHeaderClick={() => {
+            setSort((prev) => {
+              if (prev === "asc") {
+                return "desc"
+              }
+              if (prev === "desc") {
+                return undefined
+              }
+              return "asc"
+            })
+          }}
+        >
           <HeaderCell>Email</HeaderCell>
           <Cell dataKey="email" />
         </Column>
@@ -153,11 +158,10 @@ function App() {
             )}
           </Cell>
         </Column>
-
       </Table>
 
-      <StyleGuide />
-    </div >
+      {/* <StyleGuide /> */}
+    </div>
   )
 }
 

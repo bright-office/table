@@ -5,7 +5,7 @@ interface EmptyMessageProps extends React.HTMLAttributes<HTMLDivElement> {
   locale?: TableLocaleType;
   loading?: boolean;
   addPrefix: (...classes: any) => string;
-  renderEmpty?: (info: React.ReactNode) => any;
+  renderEmpty?: (info?: TableLocaleType["emptyMessage"]) => React.ReactNode;
 }
 
 const EmptyMessage = React.forwardRef(
@@ -22,7 +22,7 @@ const EmptyMessage = React.forwardRef(
       </div>
     );
 
-    return renderEmpty ? renderEmpty(emptyMessage) : emptyMessage;
+    return renderEmpty ? renderEmpty(locale?.emptyMessage) : emptyMessage;
   }
 );
 EmptyMessage.displayName = 'Table.EmptyMessage';
