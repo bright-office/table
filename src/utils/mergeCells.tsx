@@ -49,6 +49,7 @@ function mergeCells(
       isHeaderCell,
       headerHeight,
       groupHeaderHeight,
+      height,
     } = cells[i].props;
 
     const groupChildren: React.ReactNode[] = [];
@@ -91,6 +92,7 @@ function mergeCells(
       if (isTree)
         return (
           <SelectionCheckbox
+            height={height}
             onRowSelect={onRowSelect}
             index={i}
             currentRowId={currentRowId}
@@ -105,6 +107,7 @@ function mergeCells(
       return (
         <SelectionCheckbox
           variant='normal'
+          height={height}
           onRowSelect={onRowSelect}
           index={i}
           currentRowId={currentRowId}
