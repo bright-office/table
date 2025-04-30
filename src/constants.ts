@@ -21,3 +21,5 @@ export const PARENT_KEY: string = Symbol('parent') as any;
 // The attribute value added for the data row, which identifies the depth of the node (the number of parent nodes),
 // and is used in the Tree.
 export const TREE_DEPTH: string = Symbol('treeDepth') as any;
+
+export const TRANSFORM_REGEX = new RegExp(/translate\((\d+)[a-z].,([ 0-9]+)/)

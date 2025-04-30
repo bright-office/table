@@ -147,7 +147,11 @@ const Cell = React.memo(React.forwardRef(
       ...style,
       width: fullText ? width - 1 : width,
       height: nextHeight,
-      [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding
+      /* 
+       * For now I don't think so, this indent is required.
+       * [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding 
+       * */
+      [paddingKey]: style?.[paddingKey] || style?.padding
     };
 
     if (wordWrap) {
@@ -212,9 +216,7 @@ const Cell = React.memo(React.forwardRef(
       }
 
       if (isTreeCol && !isHeaderCell)
-        return <span style={{
-          width: 24,
-        }}>
+        return <span style={{ width: 24 }}>
         </span>;
 
       return null;
@@ -225,7 +227,7 @@ const Cell = React.memo(React.forwardRef(
     const content = (
       <div
         style={{
-          display: isTreeCol && hasChildren ? 'flex' : "block",
+          display: isTreeCol && hasChildren ? 'flex' : "inherit",
           overflow: "hidden",
           textOverflow: "ellipsis",
         }}

@@ -19,7 +19,8 @@ import {
   SORT_TYPE,
   TREE_DEPTH,
   ROW_HEADER_HEIGHT,
-  ROW_HEIGHT
+  ROW_HEIGHT,
+  TRANSFORM_REGEX
 } from './constants';
 import {
   mergeCells,
@@ -55,6 +56,7 @@ import { paginationProps } from './Pagination';
 import { rowSelectionState, RowSelectionWrapper } from './utils/useRowSelection';
 import { ROW_SELECTION_COL_WIDTH } from './utils/useTableDimension';
 import { tbtColumnStatus } from './utils/useCellDescriptor';
+import { flushSync } from 'react-dom';
 
 export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
   extends Omit<StandardProps, 'onScroll' | 'children'> {
@@ -495,6 +497,7 @@ const Table = React.memo(React.forwardRef(
     const wheelWrapperRef = useRef<HTMLDivElement>(null);
     const scrollbarXRef = useRef<ScrollbarInstance>(null);
     const scrollbarYRef = useRef<ScrollbarInstance>(null);
+    const scrollOffsetRef = useRef<number>(0);
 
     // TODO: Check should preserve scroll position.
     // And then only reset the value to the original or current value
@@ -505,6 +508,8 @@ const Table = React.memo(React.forwardRef(
       if (event === "bodyWidthChanged" || event === "widthChanged") {
         onScrollLeft(Math.abs(scrollX.current));
       }
+
+      forceUpdate();
     }, []);
 
     {/* this is what calculates all the table dimensions  */ }
@@ -626,15 +631,9 @@ const Table = React.memo(React.forwardRef(
       tableWidth,
       headerHeight,
       showHeader,
-      sortType: sortTypeProp,
-      defaultSortType,
-      sortColumn,
       prefix,
       onSortColumn,
       setColumnStatus,
-
-      // Force table update after column width change, so scrollbar re-renders.
-      onHeaderCellResize: forceUpdate,
       rowHeight,
       hasRowSelection: rowSelection
     });
@@ -729,11 +728,8 @@ const Table = React.memo(React.forwardRef(
           tableHeightWithoutTopNav,
           tableHeightWithoutPagination,
         }
-
       })
-
     }, [paginationRef.current])
-
 
     const renderRowExpanded = useCallback(
       (rowData?: Row) => {
@@ -981,7 +977,6 @@ const Table = React.memo(React.forwardRef(
     const bindRowClick = useCallback(
       (rowData: Row) => {
         return (event: React.MouseEvent) => {
-          //PIN: call checkbox click
           onRowClick?.(rowData, event);
         };
       },
@@ -998,7 +993,20 @@ const Table = React.memo(React.forwardRef(
     );
 
     const handleTreeToggle = useCallback(
-      (treeRowKey: any, _rowIndex: number, rowData: Row) => {
+      (treeRowKey: any, _rowIndex: number, rowData: Row, _event: React.MouseEvent) => {
+        // getting to the table row
+        const tableRow = document.querySelector(`[aria-rowindex="${_rowIndex}"][role="row"]`) as HTMLDivElement;
+        if (tableRow) {
+          const data = TRANSFORM_REGEX.exec(tableRow.style.getPropertyValue("transform"));
+          const x = Number(data?.[1]) || 0;
+          const y = Number(data?.[2]) || 0;
+
+          if (x)
+            scrollX.current = x;
+          if (y)
+            scrollY.current = y;
+        }
+
         let open = false;
         const nextExpandedRowKeys: Key[] = [];
 
@@ -1146,6 +1154,7 @@ const Table = React.memo(React.forwardRef(
       if (hasHorizontalScrollbar) {
         scrollbars.push(
           <Scrollbar
+            scrollOffsetRef={scrollOffsetRef}
             key="scrollbar"
             tableId={id}
             style={{ width: "calc(100% - 10px)" }}
@@ -1160,6 +1169,7 @@ const Table = React.memo(React.forwardRef(
       if (hasVerticalScrollbar) {
         scrollbars.push(
           <Scrollbar
+            scrollOffsetRef={scrollOffsetRef}
             vertical
             key="vertical-scrollbar"
             tableId={id}

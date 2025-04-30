@@ -86,6 +86,7 @@ function App() {
         headerHeight={80}
         isTree
         rowKey={"id"}
+        rowBordered
         pagination={{
           serverResponse,
           onRowsPerPageChange(newRowPerPage) {
@@ -100,7 +101,8 @@ function App() {
         stripeRows
         data={data}
         cellBordered
-        height={innerHeight - 200}
+        autoHeight
+        fillHeight
       >
         <Column width={200} customizable id="sn">
           <HeaderCell>
@@ -114,7 +116,7 @@ function App() {
         </Column>
 
         <ColumnGroup header="User Name">
-          <Column width={250} id="firstname">
+          <Column width={250} customizable id="firstname">
             <HeaderCell>First Name</HeaderCell>
             <Cell dataKey="firstname" />
           </Column>
