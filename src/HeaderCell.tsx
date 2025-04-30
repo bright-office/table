@@ -98,9 +98,7 @@ const HeaderCell = React.memo(React.forwardRef(
         <div
           ref={ref}
           className={classes}
-          onClick={(e) => {
-            onHeaderClick?.(props, e as React.MouseEvent)
-          }} >
+        >
           <Cell
             {...rest}
             width={width}
@@ -124,6 +122,10 @@ const HeaderCell = React.memo(React.forwardRef(
                 cursor: customizable ? 'pointer' : 'default',
               }}
               className='bt-header-cust'
+              data-customizable={customizable}
+              onClick={(e) => {
+                onHeaderClick?.(props, e as React.MouseEvent)
+              }}
             >
               <span>
                 {children}

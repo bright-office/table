@@ -25,7 +25,6 @@ interface TableDimensionProps<Row, Key> {
   affixHorizontalScrollbar?: boolean | number;
   headerHeight: number;
   autoHeight?: boolean;
-  fillHeight?: boolean;
   children?: React.ReactNode;
   expandedRowKeys?: readonly Key[];
   showHeader?: boolean;
@@ -44,6 +43,8 @@ interface TableDimensionProps<Row, Key> {
 // 2px is for the border to be display; 
 export const PAGINATION_HEIGHT = 64;
 export const ROW_SELECTION_COL_WIDTH = 50;
+
+const bottomPadding = 80;
 
 /**
  * The dimension information of the table,
@@ -66,7 +67,6 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     autoHeight: autoHeightProp,
     minHeight,
     maxHeight,
-    fillHeight,
     children,
     expandedRowKeys,
     showHeader,
@@ -76,12 +76,6 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     hasPagination,
   } = props;
 
-  // accounting for table top height.
-  const tableNavContainer = document.querySelector("#bt-table-top-nav");
-  const tableNavHeight = (tableNavContainer
-    ? tableNavContainer.getBoundingClientRect().height
-    : 0);
-
   const contentHeight = useRef(0);
   const contentWidth = useRef(0);
   const minScrollY = useRef(0);
@@ -89,14 +83,14 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
   const scrollX = useRef(0);
   const minScrollX = useRef(0);
   const tableWidth = useRef(width || 0);
-  const tableHeight = useRef(height - tableNavHeight || 0);
+  const tableHeight = useRef(height || 0);
   const columnCount = useRef(0);
   const resizeObserver = useRef<ResizeObserver>();
   const containerResizeObserver = useRef<ResizeObserver>();
   const headerOffset = useRef<ElementOffset | null>(null);
   const tableOffset = useRef<ElementOffset | null>(null);
 
-  const autoHeight = useMemo(() => autoHeightProp && !maxHeight, [autoHeightProp, maxHeight]);
+  const autoHeight = autoHeightProp;
 
   const getRowHeight = useCallback(
     (rowData?: Row) => {
@@ -126,27 +120,27 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
       nextContentHeight - (affixHeader ? headerHeight * 2 : 0)
     );
 
-    // Whether to show the horizontal scroll bar
-    const hasHorizontalScrollbar = contentWidth.current > tableWidth.current;
+    let height = Math.max(props.height, maxHeight || 0);
 
-    const height = fillHeight ? tableHeight.current : Math.max(props.height, maxHeight || 0);
     let tableBodyHeight = height;
 
     if (showHeader)
       tableBodyHeight = height - (headerHeight);
+
 
     if (!autoHeight) {
       /**
        *  The purpose of subtracting SCROLLBAR_WIDTH is to keep the scroll bar from blocking the content part.
        *  But it will only be calculated when there is a horizontal scroll bar (contentWidth > tableWidth).
        */
-      minScrollY.current =
+      /* minScrollY.current =
         -(nextContentHeight - tableBodyHeight)
         - (hasHorizontalScrollbar ? SCROLLBAR_WIDTH : 0)
-        - (hasPagination ? PAGINATION_HEIGHT : 0);
+        - (hasPagination ? PAGINATION_HEIGHT : 0); */
     }
 
     // If the height of the content area is less than the height of the table, the vertical scroll bar is reset.
+    // TODO: Look into this.
     if (nextContentHeight < height) {
       onTableScroll?.({ y: 0 });
     }
@@ -178,7 +172,6 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     headerHeight,
     autoHeight,
     maxHeight,
-    fillHeight,
     showHeader,
     getRowHeight,
     data,
@@ -274,15 +267,26 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         tableHeight.current = getHeight(tableRef.current.parentNode as Element);
       }
 
+      if (autoHeight) {
+        const tableOffset = tableRef?.current?.getBoundingClientRect().top;
+        if (tableOffset !== undefined) {
+          const maxTableHeight = innerHeight - tableOffset - bottomPadding;
+
+          tableHeight.current = Math.min(maxTableHeight, contentHeight.current - bottomPadding);
+        }
+      }
+
       if (prevHeight && prevHeight !== tableHeight.current) {
         onTableResizeChange?.(prevHeight, 'heightChanged');
       }
-
     },
     [onTableResizeChange, tableRef]
   );
 
   useMount(() => {
+    if (!tableRef?.current)
+      return;
+
     calculateTableContextHeight();
     calculateTableContentWidth();
 
@@ -293,6 +297,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     containerResizeObserver.current = new ResizeObserver(entries => {
       calculateTableHeight(entries[0].contentRect.height);
     });
+
     containerResizeObserver.current.observe(tableRef?.current?.parentNode as Element);
     const changeTableWidthWhenResize = debounce(entries => {
       const { width } = entries[0].contentRect;
@@ -309,11 +314,6 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
       containerResizeObserver.current?.disconnect();
     };
   });
-
-  useUpdateLayoutEffect(() => {
-    calculateTableHeight();
-    calculateTableContextHeight();
-  }, [fillHeight]);
 
   useUpdateLayoutEffect(() => {
     calculateTableWidth();
@@ -348,16 +348,13 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
   }, []);
 
   const getTableHeight = () => {
-    if (fillHeight) {
-      return tableHeight.current;
-    }
-
-    // When the data is empty and autoHeight is set, use the default height to display the empty state.
     if (data?.length === 0 && autoHeight) {
       return props.height;
     }
 
-    const height = autoHeightProp ? headerHeight + contentHeight.current : props.height - headerHeight;
+    const height = autoHeightProp
+      ? tableHeight.current
+      : props.height - headerHeight;
 
     if (maxHeight && height > maxHeight) {
       return maxHeight;

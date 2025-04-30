@@ -240,7 +240,6 @@ const useScrollListener = (props: ScrollListenerProps) => {
   const onWheel = useCallback(
     (deltaX: number, deltaY: number, momentumOptions?: { duration: number; bezier: string }) => {
       handleWheel(deltaX, deltaY, momentumOptions);
-
       scrollbarXRef.current?.onWheelScroll?.(deltaX);
       scrollbarYRef.current?.onWheelScroll?.(deltaY, momentumOptions?.duration ? true : false);
     },
@@ -362,6 +361,8 @@ const useScrollListener = (props: ScrollListenerProps) => {
    */
   const onScrollBody = useCallback(
     event => {
+      console.log("onscroll")
+
       if (event.target !== tableBodyRef.current) {
         return;
       }

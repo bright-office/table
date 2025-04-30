@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { omit } from "lodash";
 import { isNil } from "lodash";
 import { get } from "lodash";
-import { LAYER_WIDTH, ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
+import { ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { useClassNames, convertToFlex } from './utils';
 import TableContext from './TableContext';
 import { StandardProps, RowDataType, RowKeyType } from './@types/common';
@@ -130,9 +130,10 @@ const Cell = React.memo(React.forwardRef(
     );
 
     const nextHeight = isHeaderCell ? headerHeight : cellHeight;
+
     const styles = {
       ...predefinedStyle,
-      [fullText ? 'minWidth' : 'width']: width,
+      width: width,
       height: nextHeight,
       zIndex: depth,
       [rtl ? 'right' : 'left']: left

@@ -40,9 +40,9 @@ interface CellDescriptor {
 }
 
 export type tbtColumnStatus = Record<string, {
-  hidden: boolean,
-  pinned: "right" | "left" | false,
-  displayName: string,
+  hidden?: true,
+  pinned?: "right" | "left",
+  sort?: SortType | undefined,
   id: string,
 }>
 
@@ -112,21 +112,30 @@ const useCellDescriptor = <Row extends RowDataType>(
   const { totalVisibleColWidth, totalVisibleFlexGrow } = getTotalByColumns<Row>(columns);
 
   // calculating the column status such as hidden, pin etc 
-  let columnStatusCalc = {}
+  let columnStatusCalc: tbtColumnStatus = {}
 
   const extractCellInfo = (column: React.ReactElement<ColumnProps<Row>>, index: number, ignorePinCheck = false) => {
     if (!React.isValidElement(column))
       return
 
-    const columnName = (column.props.children?.[0]?.props.children || "")
-
-    const columnKey = column.props.id || columnName.toLowerCase?.();
+    const columnKey = column.props.id;
 
     const isHidden = column.props.isHidden;
-    columnStatusCalc[columnKey] = {
-      ...columnStatusCalc[columnKey],
-      hidden: isHidden || false,
-      displayName: columnName,
+
+    if (columnKey)
+      columnStatusCalc[columnKey] = {
+        ...columnStatusCalc[columnKey],
+        hidden: isHidden || undefined,
+        sort: column.props.sort,
+      }
+
+    if (columnKey) {
+      if (!columnStatusCalc?.[columnKey].sort)
+        delete columnStatusCalc[columnKey].sort
+      if (!columnStatusCalc[columnKey].hidden)
+        delete columnStatusCalc[columnKey].hidden
+      if (!columnStatusCalc[columnKey].pinned)
+        delete columnStatusCalc[columnKey].pinned
     }
 
     if (isHidden)
@@ -142,29 +151,33 @@ const useCellDescriptor = <Row extends RowDataType>(
 
     if (ignoreRightPinned) {
       rightPinnedCols.push(column);
-      columnStatusCalc[columnKey] = {
-        ...columnStatusCalc[columnKey],
-        pinned: "right",
-        displayName: columnName,
-      }
+      if (columnKey)
+        columnStatusCalc[columnKey] = {
+          ...columnStatusCalc[columnKey],
+          pinned: "right",
+        }
       return;
     }
 
     if (ignoreUnpinned) {
       unpinnedCols.push(column);
-      columnStatusCalc[columnKey] = {
-        ...columnStatusCalc[columnKey],
-        pinned: false,
-        displayName: columnName,
-      }
+      if (columnKey)
+        columnStatusCalc[columnKey] = {
+          ...columnStatusCalc[columnKey],
+        }
       return;
     }
 
-    columnStatusCalc[columnKey] = {
-      ...columnStatusCalc[columnKey],
-      pinned: isCurrentLeftPinned ? "left" : false,
-      displayName: columnName,
-    }
+    if (columnKey)
+      columnStatusCalc[columnKey] = {
+        ...columnStatusCalc[columnKey],
+        pinned: isCurrentLeftPinned ? "left" : undefined,
+      }
+
+    if (columnKey)
+      if (!columnStatusCalc[columnKey].pinned)
+        delete columnStatusCalc[columnKey].pinned
+
 
     const columnChildren = column.props.children as React.ReactNode[];
     const columnProps = getColumnProps(column);
