@@ -23,9 +23,6 @@ export type ColumnProps<Row extends RowDataType> = {
   /** Customizable Resize Column width */
   resizable?: boolean;
 
-  /** Sortable */
-  sortable?: boolean;
-
   /** A column of a tree */
   treeCol?: boolean;
 
