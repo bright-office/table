@@ -56,6 +56,12 @@ const Scrollbar = React.memo(React.forwardRef((props: ScrollbarProps, ref) => {
     const handleRef = useRef<HTMLDivElement>(null);
     const mouseMoveTracker = useRef<DOMMouseMoveTracker | null>();
 
+    if (vertical)
+        console.log({
+            length,
+            scrollLength,
+        })
+
     const { withClassPrefix, merge, prefix } = useClassNames(classPrefix);
     const classes = merge(
         className,

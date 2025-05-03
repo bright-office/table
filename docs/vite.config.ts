@@ -7,5 +7,4 @@ export default defineConfig({
     server: {
         port: 3000,
     },
-    base: "localhost:3000/@fs",
 })

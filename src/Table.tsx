@@ -1174,7 +1174,14 @@ const Table = React.memo(React.forwardRef((props: TableProps<RowDataType, RowKey
         }
 
         return scrollbars;
-    }, [disabledScroll, hasVerticalScrollbar, hasHorizontalScrollbar]);
+    }, [
+        disabledScroll,
+        hasVerticalScrollbar,
+        hasHorizontalScrollbar,
+        contentHeight.current,
+        contentWidth.current,
+        tableHeight
+    ]);
 
     const RenderTableBody = useCallback(({ bodyCells, rowWidth }: { bodyCells: any[], rowWidth: number }) => {
         const bodyHeight = tableHeight - (paginationHeight + headerHeight);
