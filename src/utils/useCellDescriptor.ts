@@ -8,6 +8,7 @@ import useUpdateEffect from './useUpdateEffect';
 import { ColumnProps } from '../Column';
 import useMount from './useMount';
 import { ROW_SELECTION_COL_WIDTH } from './useTableDimension';
+import { extractPinnedColumns } from './extractPinnedColumns';
 
 interface CellDescriptorProps<Row> {
     children: React.ReactNode[];
@@ -110,8 +111,6 @@ const useCellDescriptor = <Row extends RowDataType>(
         return cacheCell;
     }
 
-    const rightPinnedCols: React.ReactElement[] = [];
-    const unpinnedCols: React.ReactElement[] = [];
 
     const columns = getTableColumns(children) as React.ReactElement[];
     const count = columns.length;
@@ -120,10 +119,7 @@ const useCellDescriptor = <Row extends RowDataType>(
     // calculating the column status such as hidden, pin etc 
     let columnStatusCalc: tbtColumnStatus = {}
 
-    const extractCellInfo = (column: React.ReactElement<ColumnProps<Row>>, index: number, ignorePinCheck = false) => {
-        if (!React.isValidElement(column))
-            return
-
+    const extractCellInfo = (column: React.ReactElement<ColumnProps<Row>>, index: number) => {
         const columnKey = column.props.id;
         const canGetValidDisplayName = column.props.children?.[0].type.displayName === "HeaderCell" && typeof column.props.children?.[0]?.props.children === "string"
         const columnNameHeaderName = canGetValidDisplayName
@@ -155,40 +151,15 @@ const useCellDescriptor = <Row extends RowDataType>(
         const isCurrentRightPinned = column.props.pinned === "right";
         const isCurrentLeftPinned = column.props.pinned === "left" || column.props.pinned;
 
-        const isCurrentUnpinned = !isCurrentLeftPinned && !isCurrentRightPinned;
-
-        const ignoreRightPinned = isCurrentRightPinned && !ignorePinCheck;
-        const ignoreUnpinned = isCurrentUnpinned && !ignorePinCheck;
-
-        if (ignoreRightPinned) {
-            rightPinnedCols.push(column);
-            if (columnKey)
-                columnStatusCalc[columnKey] = {
-                    ...columnStatusCalc[columnKey],
-                    pinned: "right",
-                }
-            return;
-        }
-
-        if (ignoreUnpinned) {
-            unpinnedCols.push(column);
-            if (columnKey)
-                columnStatusCalc[columnKey] = {
-                    ...columnStatusCalc[columnKey],
-                }
-            return;
-        }
-
         if (columnKey)
             columnStatusCalc[columnKey] = {
                 ...columnStatusCalc[columnKey],
-                pinned: isCurrentLeftPinned ? "left" : undefined,
+                pinned: isCurrentLeftPinned
+                    ? "left"
+                    : isCurrentRightPinned
+                        ? "right"
+                        : undefined,
             }
-
-        if (columnKey)
-            if (!columnStatusCalc[columnKey].pinned)
-                delete columnStatusCalc[columnKey].pinned
-
 
         const columnChildren = column.props.children as React.ReactNode[];
         const columnProps = getColumnProps(column);
@@ -208,11 +179,7 @@ const useCellDescriptor = <Row extends RowDataType>(
 
         const cellWidthId = `${cell.props.dataKey}_${index}_width`;
 
-        // get column width from cache.
-        /* const initialColumnWidth = initialColumnWidths.current?.[cellWidthId]; */
-
         const currentWidth = columnWidths.current?.[cellWidthId];
-
         let cellWidth = currentWidth || width || 0;
 
         const isControlled = typeof width === 'number' && typeof onResize === 'function';
@@ -222,38 +189,15 @@ const useCellDescriptor = <Row extends RowDataType>(
                 ((tableWidth.current - totalVisibleColWidth) / totalVisibleFlexGrow) * flexGrow,
                 minWidth || 60
             );
-            /**
-             * resizable = false, width will be recalc when table render.
-             * resizable = true, only first render will use grewWidth.
-             */
-
-            // TODO: Remove this after verification.
-            // cellWidth = resizable ? currentWidth || grewWidth : grewWidth;
             cellWidth = grewWidth;
         }
 
-        let uniqueKey = `left-${index}`;
+        let uniqueKey = index;
         let isFirstCol = index === 0;
         let isLastCol = index === count - 1
 
-        if (isCurrentRightPinned) {
-            uniqueKey = `right-${index}`
-            isFirstCol = false
-        }
-
-        if (isCurrentUnpinned) {
-            const isLeftPinPresent = columns.some((col) => col.props?.fixed === "left" || col.props?.fixed || false);
-
-            if (isLeftPinPresent)
-                isFirstCol = false
-            else
-                isFirstCol = index === 0
-
-            uniqueKey = `un-${index}`;
-        }
-
         const cellProps = {
-            ...omit(columnProps, ['children', "pinned", "sort", "onHeaderClick", "customizable"]),
+            ...omit(columnProps, ['children', "pinned", "sort", "onHeaderClick", "customizable", "isHidden", "fixedPin", "hideable", "sortable", "searchable", "pinnable"]),
             'aria-colindex': index + 1,
             left,
             headerHeight,
@@ -295,17 +239,8 @@ const useCellDescriptor = <Row extends RowDataType>(
         left += cellWidth;
     }
 
-
-    // left pinned
-    React.Children.forEach(columns, extractCellInfo);
-
-    React.Children.forEach(unpinnedCols, (column, i) => {
-        extractCellInfo(column, i, true)
-    });
-
-    React.Children.forEach(rightPinnedCols, (column, i) => {
-        extractCellInfo(column, i, true)
-    });
+    const OrderedColumns = extractPinnedColumns(columns);
+    React.Children.forEach(OrderedColumns, extractCellInfo);
 
     setColumnStatus?.(columnStatusCalc);
 
