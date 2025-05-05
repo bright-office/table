@@ -18,8 +18,6 @@ export const extractPinnedColumns = (colums: tColumn[]): textractPinnedColumnsRe
         if (!isValidElement(column))
             return;
 
-        console.log(column.props.pinned, column.props.children?.[0].props.children)
-
         if (column.props.fixedPin === "left") {
             leftMostCount++;
             left.splice(leftMostCount, 0, column);
@@ -47,7 +45,6 @@ export const extractPinnedColumns = (colums: tColumn[]): textractPinnedColumnsRe
         // so, we are prepending all the columns that 
         // have pinned right. 
         if (column.props.pinned === "right") {
-            console.log("right", column.props)
             right.unshift(column);
             return;
         }

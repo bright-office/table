@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
-import { omit } from "lodash";
-import { isNil } from "lodash";
-import { get } from "lodash";
+import { omit, isNil, get, pick } from "lodash";
 import { ROW_HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { useClassNames, convertToFlex } from './utils';
 import TableContext from './TableContext';
@@ -42,6 +40,11 @@ export interface InnerCellProps<Row extends RowDataType, Key extends RowKeyType>
     treeCol?: boolean;
     expanded?: boolean;
     predefinedStyle?: React.CSSProperties;
+    /**
+     * If true, sets the overflow to hidden
+     * and truncates the text inside it.
+     */
+    truncate?: boolean;
     onTreeToggle?: (rowKey?: Key, rowIndex?: number, rowData?: Row, event?: React.MouseEvent) => void;
     renderTreeToggle?: (
         expandButton: React.ReactNode,
@@ -96,6 +99,7 @@ const Cell = React.memo(React.forwardRef(
             renderTreeToggle,
             onClick,
             onTreeToggle,
+            truncate,
             ...rest
         } = props;
 
@@ -118,6 +122,7 @@ const Cell = React.memo(React.forwardRef(
         );
 
         const { withClassPrefix, merge, prefix } = useClassNames(classPrefix);
+
         const classes = merge(
             className,
             withClassPrefix({
@@ -142,12 +147,13 @@ const Cell = React.memo(React.forwardRef(
         const paddingKey = rtl ? 'paddingRight' : 'paddingLeft';
 
         const contentStyles: React.CSSProperties = {
-            ...convertToFlex({ align, verticalAlign }),
+            ...convertToFlex({ align, verticalAlign: isHeaderCell ? "center" : verticalAlign }),
             display: 'flex',
             flexWrap: 'wrap',
             ...style,
             [fullText ? 'minWidth' : 'width']: width,
             height: nextHeight,
+
             /* 
              * For now I don't think so, this indent is required.
              * [paddingKey]: isTreeCol ? depth * LAYER_WIDTH + 10 : style?.[paddingKey] || style?.padding 
@@ -156,8 +162,20 @@ const Cell = React.memo(React.forwardRef(
         };
 
         if (wordWrap) {
+            const wordWrapValue = (wordWrap === 'break-word' || wordWrap === true) ? 'break-all' : wordWrap;
+
             contentStyles.wordBreak = typeof wordWrap === 'boolean' ? 'break-all' : wordWrap;
-            contentStyles.overflowWrap = wordWrap === 'break-word' ? wordWrap : undefined;
+            contentStyles.overflowWrap = (wordWrapValue === 'break-all') ? 'anywhere' : undefined;
+            contentStyles.whiteSpace = wordWrapValue === 'break-all' ? 'normal' : 'nowrap';
+        }
+
+        if (truncate) {
+            contentStyles.overflow = 'hidden';
+            contentStyles.textOverflow = 'ellipsis';
+            contentStyles.whiteSpace = 'nowrap';
+            contentStyles.overflowWrap = 'normal';
+            contentStyles.wordWrap = 'normal';
+            contentStyles.wordBreak = 'keep-all';
         }
 
         let cellContent: React.ReactNode = null;
@@ -224,13 +242,13 @@ const Cell = React.memo(React.forwardRef(
         };
 
         const isExpandableColumn = hasChildren && isTreeCol;
+        const contentChildStyle = pick(contentStyles, ["overflow", "width", "whiteSpace", "overflowWrap", "wordWrap", "textOverflow", "wordBreak"])
 
         const content = (
             <div
                 style={{
-                    display: isTreeCol && hasChildren ? 'flex' : "inherit",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    display: isTreeCol && hasChildren ? 'flex' : "block",
+                    ...contentChildStyle
                 }}
             >
                 {renderTreeNodeExpandIcon()}

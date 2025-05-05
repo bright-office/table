@@ -56,6 +56,7 @@ import { paginationProps } from './Pagination';
 import { rowSelectionState, RowSelectionWrapper } from './utils/useRowSelection';
 import { ROW_SELECTION_COL_WIDTH } from './utils/useTableDimension';
 import { tbtColumnStatus } from './utils/useCellDescriptor';
+import { getHeight } from 'dom-lib';
 
 export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     extends Omit<StandardProps, 'onScroll' | 'children'> {
@@ -1061,7 +1062,8 @@ const Table = React.memo(React.forwardRef((props: TableProps<RowDataType, RowKey
         const nextRowKey =
             rowKey && typeof rowData[rowKey] !== 'undefined' ? rowData[rowKey] : props.key;
 
-        const { cellHeight, ...restRowProps } = props;
+        const { ...restRowProps } = props;
+        const cellHeight = props.cellHeight;
 
         const rowProps: TableRowProps = {
             ...restRowProps,
@@ -1109,7 +1111,7 @@ const Table = React.memo(React.forwardRef((props: TableProps<RowDataType, RowKey
                     'aria-rowspan': rowSpan ? rowSpan : undefined,
                     rowData,
                     rowIndex: props.rowIndex,
-                    wordWrap,
+                    wordWrap: cell.props.wordWrap ?? wordWrap,
                     height: dataCellHeight,
                     depth: props.depth,
                     renderTreeToggle,
@@ -1128,7 +1130,9 @@ const Table = React.memo(React.forwardRef((props: TableProps<RowDataType, RowKey
                     ...treeChildInfo,
 
                     expandedRowKeys,
-                    removed: removedCell
+                    removed: removedCell,
+
+                    truncate: cell.props.truncate,
                 })
             );
         }
@@ -1254,6 +1258,12 @@ const Table = React.memo(React.forwardRef((props: TableProps<RowDataType, RowKey
                 };
 
                 top += nextRowHeight;
+
+                // TODO: WORK and fix the auto row height when wordwrap
+                const bodyCellProps = bodyCells?.[index]?.props
+                if (bodyCellProps?.wordWrap === "break-all") {
+                    rowProps.cellHeight = 100
+                }
 
                 visibleRows.current.push(renderRowData(bodyCells, rowData, rowProps, expandedRow));
             }
