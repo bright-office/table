@@ -20,7 +20,7 @@
 
     /* Referencing the bright table */
     "paths": {
-        "bright-table": ["./node_modules/bright-table/types/**/*"]
+        "@brightsoftware/table": ["./node_modules/bright-table/types/**/*"]
     }
   },
   "include": ["vite.config.ts"]
