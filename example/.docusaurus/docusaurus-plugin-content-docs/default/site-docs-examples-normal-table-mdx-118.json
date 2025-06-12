@@ -1,0 +1,20 @@
+{
+  "id": "examples/normal-table",
+  "title": "normal-table",
+  "description": "This is a example table",
+  "source": "@site/docs/examples/normal-table.mdx",
+  "sourceDirName": "examples",
+  "slug": "/examples/normal-table",
+  "permalink": "/docs/examples/normal-table",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/examples/normal-table.mdx",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Tutorial",
+    "permalink": "/docs/intro"
+  }
+}
