@@ -16,7 +16,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/bright-office/bright-table.git"
+        "url": "https://github.com/bright-office/table.git"
     },
     "type": "module",
     "main": "./dist/src/index.js",
@@ -42,16 +42,15 @@
         "types/"
     ],
     "scripts": {
-        "link:package": "bun link && cd docs && bun link bright-table",
-        "unlink:package": "bun unlink && cd docs && bun unlink bright-table",
-        "dev:docs": "cd docs && bun run dev",
+        "link:package": "bun link && cd example/react/ && bun link @brightsoftware/table",
+        "unlink:package": "bun unlink && cd example/react/ && bun unlink @brightsoftware/table",
+        "dev:docs": "cd example/react/ && bun run dev",
         "dev:lib": "vite build --watch",
         "dev:types": "npx tsc --watch --emitDeclarationOnly",
         "dev": "concurrently \"bun run dev:lib\" \"bun run dev:types\"  \"bun run link:package && bun run dev:docs\" -c \"blue,green,yellow\" -n \"lib,types,docs\"",
         "build": "vite build && bun run build:types",
         "build:lib": "vite build",
-        "build:types": "npx tsc --emitDeclarationOnly",
-        "build:docs": "cd docs && bun run build"
+        "build:types": "npx tsc --emitDeclarationOnly"
     },
     "dependencies": {
         "@juggle/resize-observer": "^3.3.1",

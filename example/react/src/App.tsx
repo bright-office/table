@@ -1,49 +1,3 @@
-# Bright Table
-
-A table library released by and for Brightsoftware. It is open for everyone to use and contribute.
-
-
-![Example screenshot from the example/react](https://github.com/user-attachments/assets/74116377-e84f-43e1-ac88-b71876f18803)
-
-
-## ✨ Features
-
-### 🔧 Core Functionality
-- **Virtual Scrolling** - High performance rendering for large datasets ( probably in future ).
-- **Server-side Pagination** - Laravel-compatible pagination support
-- **Sorting** - Built-in column sorting with custom sort indicators ( requires manual sorting by the way. )
-- **Row Selection** - Single and multi-row selection with checkboxes
-- **Tree Tables** - Hierarchical data display with expandable rows
-
-### 🎨 UI/UX Features
-- **RTL Support** - Right-to-left language compatibility
-- **Striped Rows** - Alternating row colors for better readability
-- **Hover Effects** - Interactive row highlighting
-- **Loading States** - Built-in loading indicators and empty states
-
-### 📱 Layout & Styling
-- **Fixed Columns** - Pin columns to left or right
-- **Column Groups** - Group related columns with headers
-- **Auto Height** - Dynamic table height based on content
-- **Custom Cell Rendering** - Flexible cell content with custom components
-- **Cell and Row span** - Span cells across rows and columns
-- **CSS Variables** - Easy theming and customization
-
-## 📦 Installation
-
-```bash
-npm install @brightsoftware/table
-# or
-yarn add @brightsoftware/table
-# or
-bun add @brightsoftware/table
-```
-
-## 🚀 Example
-> [!NOTE]
-> This is the code for above displayed table.
-
-```tsx
 import { Cell, Column, ColumnGroup, HeaderCell, Table } from "@brightsoftware/table"
 import { data, mockNestedData, } from "./faker";
 import { useEffect, useState } from "react";
@@ -57,9 +11,74 @@ function App() {
         setData(data);
     }, []);
 
+    const serverResponse: larvelPaginationObject = {
+        "first_page_url": "https://localschool.test/app/messages?page=1",
+        "from": 1,
+        "last_page": 70,
+        "last_page_url": "https://localschool.test/app/messages?page=70",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=2",
+                "label": "2",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=4",
+                "label": "4",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=5",
+                "label": "5",
+                "active": false
+            },
+            {
+                "url": null,
+                "label": "...",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=69",
+                "label": "69",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=70",
+                "label": "70",
+                "active": false
+            },
+            {
+                "url": "https://localschool.test/app/messages?page=2",
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": "https://localschool.test/app/messages?page=2",
+        "path": "https://localschool.test/app/messages",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 10,
+        "total": 697
+    }
     const [sort, setSort] = useState<"asc" | "desc" | undefined>();
 
     return (
+        <div className="p-20 h-full">
             <Table
                 name="MP"
                 rowSelection
@@ -68,7 +87,7 @@ function App() {
                 rowKey={"id"}
                 rowBordered
                 pagination={{
-                    // laravel pagination serverResponse,
+                    serverResponse,
                     onRowsPerPageChange(newRowPerPage) {
                         console.log(newRowPerPage)
                     },
@@ -120,7 +139,15 @@ function App() {
                     id="email"
                     sort={sort}
                     onHeaderClick={() => {
-                      // your actions
+                        setSort((prev) => {
+                            if (prev === "asc") {
+                                return "desc"
+                            }
+                            if (prev === "desc") {
+                                return undefined
+                            }
+                            return "asc"
+                        })
                     }}
                 >
                     <HeaderCell>Email</HeaderCell>
@@ -138,17 +165,10 @@ function App() {
                     </Cell>
                 </Column>
             </Table>
+
+            {/* <StyleGuide /> */}
+        </div>
     )
 }
 
 export default App
-```
-
-## 🏢 About
-
-Developed by [Bright Office System](https://brightit.com.np/) - A leading software development company focused on creating modern, efficient web solutions.
-
----
-
-For more examples, please visit the example/react folder for now.
-
