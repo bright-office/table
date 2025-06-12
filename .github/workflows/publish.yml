@@ -1,0 +1,103 @@
+name: Publish to npm
+
+on: 
+  pull_request: 
+    types: 
+      - closed
+
+jobs:
+  check_version: 
+    runs-on: ubuntu-latest
+    outputs:
+      TAG: ${{ steps.extract_version.outputs.TAG }}
+      SHOULD_PUBLISH: ${{ steps.check_git_tags.outputs.SHOULD_PUBLISH }}
+    if: github.event.pull_request.merged == true
+
+    steps: 
+      - name: checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extracting the version
+        id: extract_version
+        run: |
+          version=$(jq -r .version < package.json)
+          echo "TAG=v$version" >> $GITHUB_OUTPUT
+
+      - name: checking for previous releases with the same version.
+        id: check_git_tags
+        run: |
+          TAG="${{ steps.extract_version.outputs.TAG }}"
+          exists=$(git tag -l "$TAG")
+          if [[ -n "$exists" ]];then
+            echo "Tag already exists no need to publish, aborting..."
+            echo "SHOULD_PUBLISH=false" >> $GITHUB_OUTPUT
+          else
+            echo "This version doesnot exits yet, releasing..."
+            echo "SHOULD_PUBLISH=true" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    needs: check_version 
+    if: needs.check_version.outputs.SHOULD_PUBLISH == 'true'
+
+    steps:
+      - name: checkout the repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest 
+
+      - name: Installing dependencies
+        run: bun install
+
+      - name: Publishing to npm
+        run: |
+          bun publish --access public
+        env:
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Creating and publishing a release 
+        run: |
+          TAG="${{ needs.check_version.outputs.TAG }}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Creating and committing the release notes. 
+        run: |
+          TAG="${{ needs.check_version.outputs.TAG }}"
+          ./scripts/release-note.sh "$TAG"
+
+      - name: Pushing the release notes
+        run: |
+          TAG="${{ needs.check_version.outputs.TAG }}"
+
+          if [[ -n "$(git status -s | grep ReleaseNotes.md)" ]];then
+            git add ReleaseNotes.md
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+
+            # Note: here we are using AUTO since we don't want it to be in our release notes.
+            git commit -m "AUTO: release notes for $TAG"
+            git push origin 
+          else
+            echo "No changes to release notes, skipping commit and push."
+          fi
+
+      - name: Creating a release
+        run: |
+          TAG="${{ needs.check_version.outputs.TAG }}"
+          gh release create "$TAG" --title "$TAG 🎉" -F ReleaseNotes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
