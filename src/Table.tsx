@@ -56,7 +56,6 @@ import { paginationProps } from './Pagination';
 import { rowSelectionState, RowSelectionWrapper } from './utils/useRowSelection';
 import { ROW_SELECTION_COL_WIDTH } from './utils/useTableDimension';
 import { tbtColumnStatus } from './utils/useCellDescriptor';
-import { getHeight } from 'dom-lib';
 
 export interface TableProps<Row extends RowDataType, Key extends RowKeyType>
     extends Omit<StandardProps, 'onScroll' | 'children'> {
