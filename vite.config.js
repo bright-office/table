@@ -1,7 +1,7 @@
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import { readFile, writeFile } from 'fs';
+import { readFile, readFileSync, writeFile } from 'fs';
 
 const prependUseClient = () => {
   return {
@@ -15,6 +15,13 @@ const prependUseClient = () => {
   };
 };
 
+/* // Read package.json to get all dependencies
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+const external = [
+  ...Object.keys(packageJson.dependencies || {}),
+  ...Object.keys(packageJson.peerDependencies || {}),
+];
+*/
 // NOTE: due to some reason vite is not adding the import statement for transpiled css file
 // that is why this function(plugin) exists. 
 // This is not a good way, but it works and it's fine for now.
@@ -68,7 +75,7 @@ export default defineConfig({
     minify:false,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'bright-table',
+      name: '@brightsoftware/table',
       formats: ['es']
     },
 

@@ -1,80 +1,81 @@
 {
-    "name": "@brightsoftware/table",
-    "version": "0.0.9",
-    "description": "A React table library by bright office system.",
-    "license": "MIT",
-    "author": {
-        "name": "Bright Office",
-        "url": "https://brightit.com.np/"
+  "name": "@brightsoftware/table",
+  "version": "0.0.9",
+  "description": "A React table library by bright office system.",
+  "license": "MIT",
+  "author": {
+    "name": "Bright Office",
+    "url": "https://brightit.com.np/"
+  },
+  "keywords": [
+    "table",
+    "react-table",
+    "bright",
+    "typescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bright-office/table.git"
+  },
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./types/src/index.d.ts"
     },
-    "keywords": [
-        "table",
-        "react-table",
-        "bright",
-        "typescript",
-        "javascript"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/bright-office/table.git"
-    },
-    "type": "module",
-    "main": "./dist/src/index.js",
-    "exports": {
-        ".": {
-            "import": "./dist/src/index.js",
-            "types": "./types/src/index.d.ts"
-        },
-        "./types/*": {
-            "import": "./types/*"
-        }
-    },
-    "typesVersions": {
-        "*": {
-            "*": [
-                "./types/*"
-            ]
-        }
-    },
-    "types": "./types/src/index.d.ts",
-    "files": [
-        "dist/",
-        "types/"
-    ],
-    "scripts": {
-        "link:package": "bun link && cd example/react/ && bun link @brightsoftware/table",
-        "unlink:package": "bun unlink && cd example/react/ && bun unlink @brightsoftware/table",
-        "dev:docs": "cd example/react/ && bun run dev",
-        "dev:lib": "vite build --watch",
-        "dev:types": "npx tsc --watch --emitDeclarationOnly",
-        "dev": "concurrently \"bun run dev:lib\" \"bun run dev:types\"  \"bun run link:package && bun run dev:docs\" -c \"blue,green,yellow\" -n \"lib,types,docs\"",
-        "build": "vite build && bun run build:types",
-        "build:lib": "vite build",
-        "build:types": "npx tsc --emitDeclarationOnly"
-    },
-    "peerDependencies": {
-        "react": "^16.8.0 || ^17 || ^18 || ^19",
-        "react-dom": "^16.8.0 || ^17 || ^18 || ^19",
-
-        "@juggle/resize-observer": "^3.3.1",
-        "classnames": "^2.3.1",
-        "dom-lib": "^3.3.1",
-        "lodash": "^4.17.21",
-        "react-is": "^17.0.2"
-    },
-    "devDependencies": {
-        "@types/fs-extra": "^11.0.4",
-        "@types/lodash": "^4.14.165",
-        "@types/react": "^18.0.17",
-        "@types/react-dom": "^18.0.6",
-        "@types/react-is": "^18.2.4",
-        "autoprefixer": "^10.4.20",
-        "concurrently": "^9.1.0",
-        "less": "^4.1.3",
-        "prettier": "^2.3.2",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "typescript": "^5.2.2",
-        "vite": "^5.4.9"
+    "./types/*": {
+      "import": "./types/*"
     }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./types/*"
+      ]
+    }
+  },
+  "types": "./types/src/index.d.ts",
+  "files": [
+    "dist/",
+    "types/"
+  ],
+  "scripts": {
+    "link:package": "bun link && cd example/react/ && bun link @brightsoftware/table",
+    "unlink:package": "bun unlink && cd example/react/ && bun unlink @brightsoftware/table",
+    "dev:docs": "cd example/react/ && bun run dev",
+    "dev:lib": "vite build --watch",
+    "dev:types": "npx tsc --watch --emitDeclarationOnly",
+    "dev": "concurrently \"bun run dev:lib\" \"bun run dev:types\"  \"bun run link:package && bun run dev:docs\" -c \"blue,green,yellow\" -n \"lib,types,docs\"",
+    "build": "vite build && bun run build:types",
+    "build:lib": "vite build",
+    "build:types": "npx tsc --emitDeclarationOnly"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17 || ^18 || ^19",
+    "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
+  },
+  "dependencies": {
+    "@juggle/resize-observer": "^3.3.1",
+    "classnames": "^2.3.1",
+    "dom-lib": "^3.3.1",
+    "lodash": "^4.17.21",
+    "react-is": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.14.165",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-is": "^18.2.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "less": "^4.1.3",
+    "prettier": "^2.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.4.9"
+  }
 }
