@@ -116,7 +116,11 @@ function App() {
                 <ColumnGroup header="User Name">
                     <Column width={250} customizable id="firstname">
                         <HeaderCell>First Name</HeaderCell>
-                        <Cell dataKey="firstname" />
+                        <Cell >
+                            {(rd) => {
+                                return rd.firstname;
+                            }}
+                        </Cell>
                     </Column>
 
                     <Column width={150} customizable id="lastname">
@@ -126,7 +130,9 @@ function App() {
 
                 </ColumnGroup>
 
-                <Column width={300}
+                <Column
+                    width={300}
+                    minWidth={300}
                     flexGrow={1}
                     align="left"
                     customizable
@@ -148,7 +154,7 @@ function App() {
                     <Cell dataKey="email" />
                 </Column>
 
-                <Column width={200}>
+                <Column width={100} align="center">
                     <HeaderCell>...</HeaderCell>
                     <Cell style={{ padding: '6px' }}>
                         {rowData => (

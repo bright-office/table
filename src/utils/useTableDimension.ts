@@ -84,8 +84,8 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     const tableWidth = useRef(width || 0);
     const tableHeight = useRef(height || 0);
     const columnCount = useRef(0);
-    const resizeObserver = useRef<ResizeObserver>();
-    const containerResizeObserver = useRef<ResizeObserver>();
+    const widthResizeObserver = useRef<ResizeObserver>();
+    const heightResizeObserver = useRef<ResizeObserver>();
     const headerOffset = useRef<ElementOffset | null>(null);
     const tableOffset = useRef<ElementOffset | null>(null);
 
@@ -102,26 +102,27 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         const prevContentHeight = contentHeight.current;
         const table = tableRef?.current as HTMLDivElement;
         const rows = table?.querySelectorAll(`.${prefix?.('row')}`) || [];
-        const virtualized = table?.querySelectorAll('.virtualized')?.length > 0;
 
         //TODO: Optimize this to use just the reduce and not map and then reduce.
+        //TODO: Research this and add something like auto row height. for calcualating table 
+        //height.
         let nextContentHeight = rows.length
             ? (
                 Array.from(rows).map(
                     (row: Element, index: number) => {
-                        return getHeight(row) || getRowHeight(data?.[index])
+                        const rowHeight = getHeight(row) || getRowHeight(data?.[index])
+                        return rowHeight;
                     }
                 ) as number[]
             ).reduce((x: number, y: number) => x + y)
             : 0;
 
-        // After setting the affixHeader property, the height of the two headers should be subtracted.
         contentHeight.current = Math.round(
-            nextContentHeight - (affixHeader ? headerHeight * 2 : 0)
+            nextContentHeight - (headerHeight)
         );
 
         const hasHorizontalScrollbar = contentWidth.current > tableWidth.current;
-        let tableBodyHeight = getTableHeight();
+        let tableBodyHeight = getTableHeight() - (headerHeight);
 
         minScrollY.current = -(nextContentHeight - tableBodyHeight) - (hasHorizontalScrollbar ? SCROLLBAR_WIDTH : 0)
 
@@ -140,11 +141,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         // If the top value of the current scroll is greater than the scrollable range,
         // keep the vertical scroll bar at the bottom.
         if (maxScrollTop > 0 && currentScrollTop > maxScrollTop) {
-            if (virtualized) {
-                onTableScroll?.({ y: (data?.length || 0) * getRowHeight() - tableBodyHeight });
-            } else {
-                onTableScroll?.({ y: maxScrollTop });
-            }
+            onTableScroll?.({ y: maxScrollTop });
         }
 
         if (prevContentHeight !== contentHeight.current) {
@@ -243,30 +240,30 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         [onTableResizeChange, setOffsetByAffix, tableRef, props.hasRowSelection]
     );
 
-    const calculateTableHeight = useCallback(
-        (nextHeight?: number) => {
-            const prevHeight = tableHeight.current;
+    const calculateTableHeight = useCallback((nextHeight?: number) => {
+        const prevHeight = tableHeight.current;
 
-            if (nextHeight) {
-                tableHeight.current = nextHeight;
-            } else if (tableRef?.current) {
-                tableHeight.current = getHeight(tableRef.current.parentNode as Element);
+        if (nextHeight) {
+            tableHeight.current = nextHeight;
+        } else if (tableRef?.current) {
+            tableHeight.current = getHeight(tableRef.current.parentNode as Element);
+        }
+
+        if (autoHeight && tableRef?.current) {
+            const tableOffset = tableRef.current.getBoundingClientRect().top;
+
+            if (tableOffset !== undefined) {
+                const maxTableHeight = innerHeight - tableOffset - bottomPadding;
+                tableHeight.current = Math.min(maxTableHeight, contentHeight.current - bottomPadding - tableOffset);
             }
+        }
 
-            if (autoHeight) {
-                const tableOffset = tableRef?.current?.getBoundingClientRect().top;
 
-                if (tableOffset !== undefined) {
-                    const maxTableHeight = innerHeight - tableOffset - bottomPadding;
-                    tableHeight.current = Math.min(maxTableHeight, contentHeight.current - bottomPadding - tableOffset);
-                }
-            }
-
-            if (prevHeight && prevHeight !== tableHeight.current) {
-                onTableResizeChange?.(prevHeight, 'heightChanged');
-            }
-        },
-        [onTableResizeChange, tableRef]
+        if (prevHeight && prevHeight !== tableHeight.current) {
+            onTableResizeChange?.(prevHeight, 'heightChanged');
+        }
+    },
+        [onTableResizeChange]
     );
 
     useMount(() => {
@@ -277,52 +274,52 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         calculateTableHeight();
         setOffsetByAffix();
 
-        containerResizeObserver.current = new ResizeObserver(entries => {
+        heightResizeObserver.current = new ResizeObserver(entries => {
             calculateTableHeight(entries[0].contentRect.height);
         });
 
-        if (tableRef?.current)
-            containerResizeObserver.current.observe(tableRef?.current?.parentNode as Element);
+        widthResizeObserver.current = new ResizeObserver(
+            debounce(entries => {
+                const { width } = entries[0].contentRect;
 
-        const changeTableWidthWhenResize = debounce(entries => {
-            const { width } = entries[0].contentRect;
-            // bordered table width is 1px larger than the container width. fix: #405 #404
-            const widthWithBorder = width + 2;
+                const widthWithBorder = width + 2;
 
-            calculateTableWidth(bordered ? widthWithBorder : width);
-        }, 20);
+                calculateTableWidth(bordered ? widthWithBorder : width);
+            }, 20)
+        );
 
-        resizeObserver.current = new ResizeObserver(changeTableWidthWhenResize);
-
-        if (tableRef?.current)
-            resizeObserver.current.observe(tableRef?.current as Element);
+        if (tableRef?.current) {
+            heightResizeObserver.current.observe(tableRef?.current?.parentNode as Element);
+            widthResizeObserver.current.observe(tableRef?.current as Element);
+        }
 
         return () => {
-            resizeObserver.current?.disconnect();
-            containerResizeObserver.current?.disconnect();
+            widthResizeObserver.current?.disconnect();
+            heightResizeObserver.current?.disconnect();
         };
     });
 
     useUpdateLayoutEffect(() => {
         calculateTableWidth();
+        calculateTableHeight();
+
         calculateTableContentWidth();
         calculateTableContextHeight();
     }, [
         data,
-        contentHeight.current,
         expandedRowKeys,
         children,
         calculateTableContextHeight,
-        calculateTableContentWidth
+        calculateTableContentWidth,
+        tableRef?.current,
     ]);
 
     const isVisible = useIntersectionObserver(tableRef);
 
     useUpdateLayoutEffect(() => {
-        // When the table is visible, the width of the table is recalculated.
-        // fix: https://github.com/rsuite/rsuite/issues/397
         if (isVisible) {
             calculateTableWidth();
+            calculateTableHeight();
             calculateTableContentWidth();
         }
     }, [isVisible]);
@@ -336,7 +333,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
     }, []);
 
     const getTableHeight = () => {
-        if (data?.length === 0 && autoHeight) {
+        if (data?.length === 0) {
             return props.height;
         }
 
