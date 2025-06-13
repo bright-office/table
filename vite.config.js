@@ -15,8 +15,12 @@ const prependUseClient = () => {
   };
 };
 
-// TODO: Some how mark all the dependencies as external to make the bundle smaller
-// and make sure they get auto installed with all the package managers
+// Read package.json to get all dependencies
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+const external = [
+  ...Object.keys(packageJson.peerDependencies || {}),
+];
+
 
 // NOTE: due to some reason vite is not adding the import statement for transpiled css file
 // that is why this function(plugin) exists. 
@@ -82,6 +86,14 @@ export default defineConfig({
         entryFileNames: '[name].js',
         dir: 'dist',
         exports: 'named',
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+          "lodash": "lodash",
+          "@juggle/resize-observer": "ResizeObserver",
+          "classnames": "classnames",
+          "react-is": "reactIs"
+        }
       }
     },
   },

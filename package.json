@@ -55,12 +55,19 @@
   "peerDependencies": {
     "react": "^16.8.0 || ^17 || ^18 || ^19",
     "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
-  },
-  "dependencies": {
+    "lodash": "^4.17.21",
     "@juggle/resize-observer": "^3.3.1",
     "classnames": "^2.3.1",
     "dom-lib": "^3.3.1",
+    "react-is": "^17.0.2"
+  },
+  "dependencies": {
+    "react": "^16.8.0 || ^17 || ^18 || ^19",
+    "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
     "lodash": "^4.17.21",
+    "@juggle/resize-observer": "^3.3.1",
+    "classnames": "^2.3.1",
+    "dom-lib": "^3.3.1",
     "react-is": "^17.0.2"
   },
   "devDependencies": {
