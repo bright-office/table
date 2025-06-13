@@ -2,8 +2,12 @@
 # Release Notes
 
 ## Bug Fixes
-(d9e9dc0) fix: attempt at fixing the dependencies issue --sarojregmi200
+(a5d0ec1) fix: corrected the table height issue for small number of rows --sarojregmi200
 
 ## Small tasks
-(1e40700) chore: version bump and conflict fix --sarojregmi200
+(a40cfc4) chore: version bump from v0.1.0 to v0.1.1 --sarojregmi200
+(731cac4) chore: version bump --sarojregmi200
+
+## Tests
+(4266a11) test: bundling all the deps with the package --sarojregmi200
 
