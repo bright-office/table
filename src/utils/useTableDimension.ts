@@ -159,7 +159,8 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         getRowHeight,
         data,
         onTableScroll,
-        onTableResizeChange
+        onTableResizeChange,
+      tableHeight.current
     ]);
 
     const setOffsetByAffix = useCallback(() => {
@@ -254,7 +255,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
 
             if (tableOffset !== undefined) {
                 const maxTableHeight = innerHeight - tableOffset - bottomPadding;
-                tableHeight.current = Math.min(maxTableHeight, contentHeight.current - bottomPadding - tableOffset);
+                tableHeight.current = Math.min(maxTableHeight, contentHeight.current+ headerHeight);
             }
         }
 
@@ -321,6 +322,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
             calculateTableWidth();
             calculateTableHeight();
             calculateTableContentWidth();
+        calculateTableContextHeight();
         }
     }, [isVisible]);
 
@@ -332,7 +334,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         scrollX.current = value;
     }, []);
 
-    const getTableHeight = () => {
+    const getTableHeight = useCallback(() => {
         if (data?.length === 0) {
             return props.height;
         }
@@ -350,7 +352,7 @@ const useTableDimension = <Row extends RowDataType, Key>(props: TableDimensionPr
         }
 
         return height;
-    };
+    }, [tableHeight.current]);
 
     return {
         contentHeight,

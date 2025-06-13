@@ -15,13 +15,13 @@ const prependUseClient = () => {
   };
 };
 
-/* // Read package.json to get all dependencies
+// Read package.json to get all dependencies
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 const external = [
   ...Object.keys(packageJson.dependencies || {}),
   ...Object.keys(packageJson.peerDependencies || {}),
 ];
-*/
+
 // NOTE: due to some reason vite is not adding the import statement for transpiled css file
 // that is why this function(plugin) exists. 
 // This is not a good way, but it works and it's fine for now.
@@ -80,7 +80,7 @@ export default defineConfig({
     },
 
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: external,
       output: {
         preserveModules: true,
         entryFileNames: '[name].js',
