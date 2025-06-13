@@ -21,6 +21,7 @@ const external = [
   ...Object.keys(packageJson.peerDependencies || {}),
 ];
 
+
 // NOTE: due to some reason vite is not adding the import statement for transpiled css file
 // that is why this function(plugin) exists. 
 // This is not a good way, but it works and it's fine for now.
@@ -79,7 +80,7 @@ export default defineConfig({
     },
 
     rollupOptions: {
-      external: external,
+      external: ["react", "react-dom"],
       output: {
         preserveModules: true,
         entryFileNames: '[name].js',
