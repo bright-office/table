@@ -101,7 +101,7 @@ const Cell = React.memo(React.forwardRef(
             onTreeToggle,
             truncate,
             ...rest
-        } = props;
+        } = omit(props, ["hideable", "sortable", "searchable", "pinnable"]);
 
         const { rtl, hasCustomTreeCol, isTree } = React.useContext(TableContext);
 

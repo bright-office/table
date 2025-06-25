@@ -197,7 +197,7 @@ const useCellDescriptor = <Row extends RowDataType>(
         let isLastCol = index === count - 1
 
         const cellProps = {
-            ...omit(columnProps, ['children', "pinned", "sort", "onHeaderClick", "customizable", "isHidden", "fixedPin", "hideable", "sortable", "searchable", "pinnable"]),
+            ...omit(columnProps, ['children', "pinned", "sort", "onHeaderClick", "customizable", "isHidden", "fixedPin", ]),
             'aria-colindex': index + 1,
             left,
             headerHeight,
